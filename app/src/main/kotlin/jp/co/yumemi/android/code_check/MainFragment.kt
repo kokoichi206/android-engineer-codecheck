@@ -67,7 +67,6 @@ val diff_util = object : DiffUtil.ItemCallback<Repository>() {
     override fun areContentsTheSame(oldItem: Repository, newItem: Repository): Boolean {
         return oldItem == newItem
     }
-
 }
 
 class MainFragmentAdapter(
