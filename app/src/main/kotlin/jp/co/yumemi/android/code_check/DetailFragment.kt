@@ -12,6 +12,9 @@ import coil.load
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.databinding.FragmentDetailBinding
 
+/**
+ * fragment_detail の設定。
+ */
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val args: DetailFragmentArgs by navArgs()

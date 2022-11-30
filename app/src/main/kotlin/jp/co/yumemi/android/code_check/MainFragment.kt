@@ -14,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 
+/**
+ * fragment_main の設定。
+ */
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +62,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 }
 
+/**
+ * MainFragmentAdapter で使う diffCallback の定義。
+ */
 val diff_util = object : DiffUtil.ItemCallback<Repository>() {
     override fun areItemsTheSame(oldItem: Repository, newItem: Repository): Boolean {
         return oldItem.name == newItem.name

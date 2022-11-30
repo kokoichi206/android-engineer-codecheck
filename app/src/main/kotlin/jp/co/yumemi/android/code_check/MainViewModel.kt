@@ -20,7 +20,7 @@ import org.json.JSONObject
 import java.util.*
 
 /**
- * MainFragment で使う。
+ * MainFragment で使用。
  */
 class MainViewModel(
     val context: Context
@@ -42,9 +42,6 @@ class MainViewModel(
 
             val items = mutableListOf<Repository>()
 
-            /**
-             * アイテムの個数分ループする
-             */
             for (i in 0 until jsonItems.length()) {
                 val jsonItem = jsonItems.optJSONObject(i)!!
                 val name = jsonItem.optString("full_name")
