@@ -26,14 +26,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         binding = FragmentDetailBinding.bind(view)
 
-        var item = args.item
+        val item = args.item
 
-        _binding.ownerIconView.load(item.ownerIconUrl);
-        _binding.nameView.text = item.name;
-        _binding.languageView.text = item.language;
-        _binding.starsView.text = "${item.stargazersCount} stars";
-        _binding.watchersView.text = "${item.watchersCount} watchers";
-        _binding.forksView.text = "${item.forksCount} forks";
-        _binding.openIssuesView.text = "${item.openIssuesCount} open issues";
+        val context = requireContext()
+
+        _binding.ownerIconView.load(item.ownerIconUrl)
+        _binding.nameView.text = item.name
+        _binding.languageView.text = item.language
+        _binding.starsView.text = context.getString(R.string.detail_stars, item.stargazersCount)
+        _binding.watchersView.text = context.getString(R.string.detail_watchers, item.watchersCount)
+        _binding.forksView.text = context.getString(R.string.detail_forks, item.forksCount)
+        _binding.openIssuesView.text = context.getString(R.string.detail_open_issues, item.openIssuesCount)
     }
 }
