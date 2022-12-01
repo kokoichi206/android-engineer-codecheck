@@ -27,26 +27,22 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val viewModel = MainViewModel(requireContext())
 
         val layoutManager = LinearLayoutManager(requireContext())
-        val dividerItemDecoration =
-            DividerItemDecoration(requireContext(), layoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
         val adapter = MainFragmentAdapter(object : MainFragmentAdapter.OnItemClickListener {
             override fun itemClick(item: Repository) {
                 gotoRepositoryFragment(item)
             }
         })
 
-        binding.searchInputText
-            .setOnEditorActionListener { editText, action, _ ->
-                if (action == EditorInfo.IME_ACTION_SEARCH) {
-                    editText.text.toString().let {
-                        viewModel.searchResults(it).apply {
-                            adapter.submitList(this)
-                        }
-                    }
-                    return@setOnEditorActionListener true
+        binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
+            if (action == EditorInfo.IME_ACTION_SEARCH) {
+                viewModel.searchResults(editText.text.toString()).apply {
+                    adapter.submitList(this)
                 }
-                return@setOnEditorActionListener false
+                return@setOnEditorActionListener true
             }
+            return@setOnEditorActionListener false
+        }
 
         binding.recyclerView.also {
             it.layoutManager = layoutManager
@@ -56,8 +52,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     fun gotoRepositoryFragment(item: Repository) {
-        val action = MainFragmentDirections
-            .actionRepositoriesFragmentToRepositoryFragment(item = item)
+        val action = MainFragmentDirections.actionRepositoriesFragmentToRepositoryFragment(item = item)
         findNavController().navigate(action)
     }
 }
@@ -86,15 +81,13 @@ class MainFragmentAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_item, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
-            item.name
+        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text = item.name
 
         holder.itemView.setOnClickListener {
             itemClickListener.itemClick(item)
