@@ -3,9 +3,10 @@
  */
 package jp.co.yumemi.android.code_check
 
+import android.app.Application
 import android.content.Context
 import android.os.Parcelable
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
@@ -23,9 +24,8 @@ import java.util.*
  * MainFragment で使用。
  */
 class MainViewModel(
-    val context: Context
-) : ViewModel() {
-
+    application: Application
+) : AndroidViewModel(application) {
     // 検索結果
     fun searchResults(inputText: String): List<Repository> = runBlocking {
         val client = HttpClient(Android)
@@ -74,6 +74,9 @@ class MainViewModel(
         }.await()
     }
 }
+
+val AndroidViewModel.context: Context
+    get() = getApplication()
 
 @Parcelize
 data class Repository(
