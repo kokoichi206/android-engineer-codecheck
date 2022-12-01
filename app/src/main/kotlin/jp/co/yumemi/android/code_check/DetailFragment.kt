@@ -20,12 +20,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val args: DetailFragmentArgs by navArgs()
 
     private var binding: FragmentDetailBinding? = null
-    private val _binding get() = binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("検索した日時", lastSearchDate.toString())
+        lastSearchDate?.let { date ->
+            Log.d("検索した日時", date.toString())
+        }
 
         binding = FragmentDetailBinding.bind(view)
 
@@ -33,12 +34,14 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         val context = requireContext()
 
-        _binding.ownerIconView.load(item.ownerIconUrl)
-        _binding.nameView.text = item.name
-        _binding.languageView.text = item.language
-        _binding.starsView.text = context.getString(R.string.detail_stars, item.stargazersCount)
-        _binding.watchersView.text = context.getString(R.string.detail_watchers, item.watchersCount)
-        _binding.forksView.text = context.getString(R.string.detail_forks, item.forksCount)
-        _binding.openIssuesView.text = context.getString(R.string.detail_open_issues, item.openIssuesCount)
+        binding?.let {
+            it.ownerIconView.load(item.ownerIconUrl)
+            it.nameView.text = item.name
+            it.languageView.text = item.language
+            it.starsView.text = context.getString(R.string.detail_stars, item.stargazersCount)
+            it.watchersView.text = context.getString(R.string.detail_watchers, item.watchersCount)
+            it.forksView.text = context.getString(R.string.detail_forks, item.forksCount)
+            it.openIssuesView.text = context.getString(R.string.detail_open_issues, item.openIssuesCount)
+        }
     }
 }
