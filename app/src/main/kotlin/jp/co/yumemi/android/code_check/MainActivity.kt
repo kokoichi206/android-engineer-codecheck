@@ -9,6 +9,6 @@ import java.util.*
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     companion object {
-        lateinit var lastSearchDate: Date
+        var lastSearchDate: Date? = null
     }
 }
