@@ -87,7 +87,7 @@ class MainFragmentAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text = item.name
+        holder.itemView.findViewById<TextView>(R.id.repositoryNameView).text = item.name
 
         holder.itemView.setOnClickListener {
             itemClickListener.itemClick(item)
