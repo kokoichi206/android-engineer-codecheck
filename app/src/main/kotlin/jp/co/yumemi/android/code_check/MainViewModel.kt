@@ -4,8 +4,6 @@
 package jp.co.yumemi.android.code_check
 
 import android.app.Application
-import android.content.Context
-import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import io.ktor.client.*
@@ -14,10 +12,11 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.util.context
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import java.util.*
 
@@ -91,17 +90,3 @@ class MainViewModel(
         }.await()
     }
 }
-
-val AndroidViewModel.context: Context
-    get() = getApplication()
-
-@Parcelize
-data class Repository(
-    val name: String,
-    val ownerIconUrl: String,
-    val language: String,
-    val stargazersCount: Long,
-    val watchersCount: Long,
-    val forksCount: Long,
-    val openIssuesCount: Long,
-) : Parcelable

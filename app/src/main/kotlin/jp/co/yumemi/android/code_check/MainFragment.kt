@@ -4,15 +4,13 @@
 package jp.co.yumemi.android.code_check
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
+import jp.co.yumemi.android.code_check.models.Repository
 
 /**
  * fragment_main の設定。
@@ -54,43 +52,5 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     fun gotoRepositoryFragment(item: Repository) {
         val action = MainFragmentDirections.actionRepositoriesFragmentToRepositoryFragment(item = item)
         findNavController().navigate(action)
-    }
-}
-
-/**
- * MainFragmentAdapter で使う diffCallback の定義。
- */
-val diff_util = object : DiffUtil.ItemCallback<Repository>() {
-    override fun areItemsTheSame(oldItem: Repository, newItem: Repository): Boolean {
-        return oldItem.name == newItem.name
-    }
-
-    override fun areContentsTheSame(oldItem: Repository, newItem: Repository): Boolean {
-        return oldItem == newItem
-    }
-}
-
-class MainFragmentAdapter(
-    private val itemClickListener: OnItemClickListener,
-) : ListAdapter<Repository, MainFragmentAdapter.ViewHolder>(diff_util) {
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    interface OnItemClickListener {
-        fun itemClick(item: Repository)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_item, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.itemView.findViewById<TextView>(R.id.repositoryNameView).text = item.name
-
-        holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(item)
-        }
     }
 }
