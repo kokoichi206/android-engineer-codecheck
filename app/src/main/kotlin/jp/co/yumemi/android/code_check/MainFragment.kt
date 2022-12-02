@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.data.GitHubAPI
+import jp.co.yumemi.android.code_check.data.repository.GitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 import jp.co.yumemi.android.code_check.models.Repository
 import kotlinx.coroutines.launch
@@ -28,7 +29,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        val viewModel = MainViewModel(GitHubAPI())
+        // DI: GitHubRepositoryImpl を利用する
+        val api = GitHubAPI()
+        val viewModel = MainViewModel(GitHubRepositoryImpl(api))
 
         // RecyclerView の登場人物を取得
         val layoutManager = LinearLayoutManager(requireContext())

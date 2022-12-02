@@ -6,7 +6,7 @@ package jp.co.yumemi.android.code_check
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import jp.co.yumemi.android.code_check.data.GitHubAPI
+import jp.co.yumemi.android.code_check.data.repository.GitHubRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
  * MainFragment で使用。
  */
 class MainViewModel(
-    private val api: GitHubAPI,
+    private val repository: GitHubRepository,
 ) : ViewModel() {
 
     companion object {
@@ -39,7 +39,7 @@ class MainViewModel(
             try {
                 _uiState.update { it.copy(isLoading = true) }
 
-                val result = api.searchRepositories(inputText)
+                val result = repository.searchRepositories(inputText)
                 _uiState.update { it.copy(isLoading = false, repositories = result) }
 
             } catch (e: Exception) {
