@@ -24,7 +24,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        val viewModel = MainViewModel(requireContext())
+        val viewModel = MainViewModel(application = requireActivity().application)
 
         val layoutManager = LinearLayoutManager(requireContext())
         val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)

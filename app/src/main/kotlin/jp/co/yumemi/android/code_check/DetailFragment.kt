@@ -19,8 +19,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val args: DetailFragmentArgs by navArgs()
 
-    private var binding: FragmentDetailBinding? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -28,13 +26,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             Log.d("検索した日時", date.toString())
         }
 
-        binding = FragmentDetailBinding.bind(view)
+        val binding = FragmentDetailBinding.bind(view)
 
-        val item = args.item
+        binding.also {
+            val item = args.item
+            val context = requireContext()
 
-        val context = requireContext()
-
-        binding?.let {
             it.ownerIconView.load(item.ownerIconUrl)
             it.nameView.text = item.name
             it.languageView.text = item.language
