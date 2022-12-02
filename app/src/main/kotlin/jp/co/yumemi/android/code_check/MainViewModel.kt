@@ -6,6 +6,7 @@ package jp.co.yumemi.android.code_check
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
@@ -14,9 +15,10 @@ import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.util.context
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.*
 
@@ -31,21 +33,24 @@ class MainViewModel(
         private val TAG = MainViewModel::class.java.simpleName
     }
 
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState = _uiState.asStateFlow()
+
     // 検索結果
-    fun searchResults(inputText: String): List<Repository> = runBlocking {
+    fun searchResults(inputText: String) {
 
         // API 呼び出し前のバリデーション
         // query パラメータが空の場合 422 が返る
         if (inputText.isBlank()) {
-            return@runBlocking emptyList<Repository>()
+            return
         }
 
         val client = HttpClient(Android)
-        return@runBlocking GlobalScope.async {
 
-            val result = mutableListOf<Repository>()
-
+        val result = mutableListOf<Repository>()
+        viewModelScope.launch {
             try {
+                _uiState.update { it.copy(isLoading = true) }
                 val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
                     header("Accept", "application/vnd.github.v3+json")
                     parameter("q", inputText)
@@ -79,14 +84,16 @@ class MainViewModel(
                     }
                 }
                 lastSearchDate = Date()
+                _uiState.update { it.copy(isLoading = false, repositories = result) }
 
             } catch (e: Exception) {
-                e.localizedMessage?.let {
-                    Log.e(TAG, it)
+                e.localizedMessage?.let { msg ->
+                    Log.e(TAG, msg)
+                    _uiState.update { it.copy(error = msg) }
                 }
+            } finally {
+                client.close()
             }
-
-            return@async result.toList()
-        }.await()
+        }
     }
 }
