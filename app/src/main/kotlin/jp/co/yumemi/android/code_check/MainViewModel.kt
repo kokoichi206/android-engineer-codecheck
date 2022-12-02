@@ -11,7 +11,6 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.util.toRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.util.*
 
 /**
  * MainFragment で使用。
@@ -62,7 +60,6 @@ class MainViewModel : ViewModel() {
                         result.add(jsonItem.toRepository())
                     }
                 }
-                lastSearchDate = Date()
                 _uiState.update { it.copy(isLoading = false, repositories = result) }
 
             } catch (e: Exception) {

@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
+import jp.co.yumemi.android.code_check.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 import jp.co.yumemi.android.code_check.models.Repository
 import kotlinx.coroutines.launch
@@ -48,7 +49,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         // サーチボタンが押された時のリスナーの設定
         binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
             if (action == EditorInfo.IME_ACTION_SEARCH) {
+                // 入力されたテキストで検索を行う
                 viewModel.searchResults(editText.text.toString())
+                // 最終検索日時を更新する
+                updateLastSearchDate()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
