@@ -4,15 +4,17 @@
 package jp.co.yumemi.android.code_check
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
+import jp.co.yumemi.android.code_check.models.Repository
+import kotlinx.coroutines.launch
 
 /**
  * fragment_main の設定。
@@ -24,8 +26,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        val viewModel = MainViewModel(application = requireActivity().application)
+        val viewModel = MainViewModel()
 
+        // RecyclerView の登場人物を取得
         val layoutManager = LinearLayoutManager(requireContext())
         val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
         val adapter = MainFragmentAdapter(object : MainFragmentAdapter.OnItemClickListener {
@@ -34,16 +37,24 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         })
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    adapter.submitList(uiState.repositories)
+                }
+            }
+        }
+
+        // サーチボタンが押された時のリスナーの設定
         binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
             if (action == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel.searchResults(editText.text.toString()).apply {
-                    adapter.submitList(this)
-                }
+                viewModel.searchResults(editText.text.toString())
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
 
+        // RecyclerView に設定
         binding.recyclerView.also {
             it.layoutManager = layoutManager
             it.addItemDecoration(dividerItemDecoration)
@@ -54,43 +65,5 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     fun gotoRepositoryFragment(item: Repository) {
         val action = MainFragmentDirections.actionRepositoriesFragmentToRepositoryFragment(item = item)
         findNavController().navigate(action)
-    }
-}
-
-/**
- * MainFragmentAdapter で使う diffCallback の定義。
- */
-val diff_util = object : DiffUtil.ItemCallback<Repository>() {
-    override fun areItemsTheSame(oldItem: Repository, newItem: Repository): Boolean {
-        return oldItem.name == newItem.name
-    }
-
-    override fun areContentsTheSame(oldItem: Repository, newItem: Repository): Boolean {
-        return oldItem == newItem
-    }
-}
-
-class MainFragmentAdapter(
-    private val itemClickListener: OnItemClickListener,
-) : ListAdapter<Repository, MainFragmentAdapter.ViewHolder>(diff_util) {
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    interface OnItemClickListener {
-        fun itemClick(item: Repository)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_item, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.itemView.findViewById<TextView>(R.id.repositoryNameView).text = item.name
-
-        holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(item)
-        }
     }
 }
