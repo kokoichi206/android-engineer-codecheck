@@ -34,7 +34,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
             it.ownerIconView.load(item.ownerIconUrl)
             it.nameView.text = item.name
-            it.languageView.text = item.language
+            it.languageView.text = context.getString(R.string.written_language, item.language)
             it.starsView.text = context.getString(R.string.detail_stars, item.stargazersCount)
             it.watchersView.text = context.getString(R.string.detail_watchers, item.watchersCount)
             it.forksView.text = context.getString(R.string.detail_forks, item.forksCount)

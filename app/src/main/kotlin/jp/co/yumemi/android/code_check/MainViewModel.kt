@@ -3,9 +3,8 @@
  */
 package jp.co.yumemi.android.code_check
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -14,7 +13,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.models.Repository
-import jp.co.yumemi.android.code_check.util.context
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,9 +23,7 @@ import java.util.*
 /**
  * MainFragment で使用。
  */
-class MainViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class MainViewModel : ViewModel() {
 
     companion object {
         private val TAG = MainViewModel::class.java.simpleName
@@ -74,7 +70,7 @@ class MainViewModel(
                             Repository(
                                 name = name,
                                 ownerIconUrl = ownerIconUrl,
-                                language = context.getString(R.string.written_language, language),
+                                language = language,
                                 stargazersCount = stargazersCount,
                                 watchersCount = watchersCount,
                                 forksCount = forksCount,

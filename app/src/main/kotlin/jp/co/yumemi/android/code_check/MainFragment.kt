@@ -26,7 +26,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        val viewModel = MainViewModel(application = requireActivity().application)
+        val viewModel = MainViewModel()
 
         // RecyclerView の登場人物を取得
         val layoutManager = LinearLayoutManager(requireContext())
