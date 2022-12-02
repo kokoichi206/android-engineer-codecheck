@@ -38,7 +38,7 @@ class MainViewModel : ViewModel() {
 
         // API 呼び出し前のバリデーション
         // query パラメータが空の場合 422 が返る
-        if (inputText.isBlank()) {
+        if (inputText.isBlank() || uiState.value.isLoading) {
             return
         }
 
@@ -68,7 +68,7 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.localizedMessage?.let { msg ->
                     Log.e(TAG, msg)
-                    _uiState.update { it.copy(error = msg) }
+                    _uiState.update { it.copy(isLoading = false, error = msg) }
                 }
             } finally {
                 client.close()
