@@ -6,23 +6,18 @@ package jp.co.yumemi.android.code_check
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import jp.co.yumemi.android.code_check.models.Repository
-import jp.co.yumemi.android.code_check.util.toRepository
+import jp.co.yumemi.android.code_check.data.GitHubAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 /**
  * MainFragment で使用。
  */
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val api: GitHubAPI,
+) : ViewModel() {
 
     companion object {
         private val TAG = MainViewModel::class.java.simpleName
@@ -40,26 +35,11 @@ class MainViewModel : ViewModel() {
             return
         }
 
-        val client = HttpClient(Android)
-
-        val result = mutableListOf<Repository>()
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
-                val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
-                    header("Accept", "application/vnd.github.v3+json")
-                    parameter("q", inputText)
-                }
-                val jsonBody = JSONObject(response.receive<String>())
-                val jsonItems = jsonBody.optJSONArray("items")
 
-                jsonItems?.let {
-                    for (i in 0 until it.length()) {
-                        val jsonItem = it.optJSONObject(i)
-
-                        result.add(jsonItem.toRepository())
-                    }
-                }
+                val result = api.searchRepositories(inputText)
                 _uiState.update { it.copy(isLoading = false, repositories = result) }
 
             } catch (e: Exception) {
@@ -67,8 +47,6 @@ class MainViewModel : ViewModel() {
                     Log.e(TAG, msg)
                     _uiState.update { it.copy(isLoading = false, error = msg) }
                 }
-            } finally {
-                client.close()
             }
         }
     }
