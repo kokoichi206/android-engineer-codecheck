@@ -1,7 +1,7 @@
 /*
  * Copyright © 2021 YUMEMI Inc. All rights reserved.
  */
-package jp.co.yumemi.android.code_check
+package jp.co.yumemi.android.code_check.presentation.main
 
 import android.os.Bundle
 import android.view.View
@@ -12,11 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
-import jp.co.yumemi.android.code_check.MainActivity.Companion.updateLastSearchDate
+import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.data.GitHubAPI
 import jp.co.yumemi.android.code_check.data.repository.GitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import kotlinx.coroutines.launch
 
 /**
