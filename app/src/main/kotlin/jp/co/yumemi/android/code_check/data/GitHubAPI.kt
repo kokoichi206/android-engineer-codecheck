@@ -12,13 +12,13 @@ import org.json.JSONObject
 /**
  * GitHub API に関するクラス。
  */
-class GitHubAPI {
+class GitHubAPI(
+    private val client: HttpClient = HttpClient(Android),
+) {
 
     companion object {
         const val BASE_URL = "https://api.github.com"
     }
-
-    private val client = HttpClient(Android)
 
     suspend fun searchRepositories(query: String): List<Repository> {
         val response: HttpResponse = client.get("$BASE_URL/search/repositories") {
