@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.databinding.FragmentDetailBinding
+import jp.co.yumemi.android.code_check.models.Repository
 
 /**
  * fragment_detail の設定。
@@ -27,9 +28,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
 
         val binding = FragmentDetailBinding.bind(view)
+        val item = args.item
+        showRepositoryInfo(binding, item)
+    }
 
+    private fun showRepositoryInfo(binding: FragmentDetailBinding, item: Repository) {
         binding.also {
-            val item = args.item
             val context = requireContext()
 
             it.ownerIconView.load(item.ownerIconUrl)

@@ -4,7 +4,7 @@ import jp.co.yumemi.android.code_check.models.Repository
 import org.json.JSONObject
 
 /**
- * GitHub API から取得される JSON から Repository を取得する。
+ * GitHub API から取得される JSON から [Repository] を取得する。
  *
  * see documentation:
  * https://docs.github.com/en/rest/search?apiVersion=2022-11-28#search-repositories
