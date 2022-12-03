@@ -8,10 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.presentation.main.MainView
+import jp.co.yumemi.android.code_check.presentation.theme.CustomTheme
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity: ComponentActivity() {
+class MainActivity : ComponentActivity() {
 
     companion object {
         // 最終検索日時
@@ -25,7 +26,9 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView()
+            CustomTheme {
+                MainView()
+            }
         }
     }
 }

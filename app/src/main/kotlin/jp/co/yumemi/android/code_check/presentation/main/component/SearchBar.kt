@@ -50,6 +50,7 @@ fun SearchBar(
             containerColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
+            textColor = Color.Black,
         ),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search

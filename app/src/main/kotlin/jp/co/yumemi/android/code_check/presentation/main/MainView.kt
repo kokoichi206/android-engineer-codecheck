@@ -27,13 +27,15 @@ fun MainView() {
                 title = {
                     Text(
                         text = stringResource(id = R.string.app_name),
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color.Red
+                    containerColor = MaterialTheme.colorScheme.primary,
                 )
             )
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background,
     ) {
         SearchView(paddingValues = it)
     }
