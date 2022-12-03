@@ -30,17 +30,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val binding = FragmentMainBinding.bind(view)
 
         // DI: GitHubRepositoryImpl を利用する
+        // TODO: Dagger 使う
         val api = GitHubAPI()
         val viewModel = MainViewModel(GitHubRepositoryImpl(api))
 
-        // RecyclerView の登場人物を取得
-        val layoutManager = LinearLayoutManager(requireContext())
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
         val adapter = MainFragmentAdapter(object : MainFragmentAdapter.OnItemClickListener {
             override fun itemClick(item: Repository) {
                 gotoRepositoryFragment(item)
             }
         })
+
+        initRecyclerView(binding, adapter)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -61,8 +61,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
             return@setOnEditorActionListener false
         }
+    }
 
-        // RecyclerView に設定
+    private fun initRecyclerView(binding: FragmentMainBinding, adapter: MainFragmentAdapter) {
+        // RecyclerView の登場人物を取得
+        val layoutManager = LinearLayoutManager(requireContext())
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
+
         binding.recyclerView.also {
             it.layoutManager = layoutManager
             it.addItemDecoration(dividerItemDecoration)
