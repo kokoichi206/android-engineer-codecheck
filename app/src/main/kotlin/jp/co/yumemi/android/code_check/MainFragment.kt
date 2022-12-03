@@ -12,6 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
+import jp.co.yumemi.android.code_check.MainActivity.Companion.updateLastSearchDate
+import jp.co.yumemi.android.code_check.data.GitHubAPI
+import jp.co.yumemi.android.code_check.data.repository.GitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 import jp.co.yumemi.android.code_check.models.Repository
 import kotlinx.coroutines.launch
@@ -26,16 +29,18 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        val viewModel = MainViewModel()
+        // DI: GitHubRepositoryImpl を利用する
+        // TODO: Dagger 使う
+        val api = GitHubAPI()
+        val viewModel = MainViewModel(GitHubRepositoryImpl(api))
 
-        // RecyclerView の登場人物を取得
-        val layoutManager = LinearLayoutManager(requireContext())
-        val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
         val adapter = MainFragmentAdapter(object : MainFragmentAdapter.OnItemClickListener {
             override fun itemClick(item: Repository) {
                 gotoRepositoryFragment(item)
             }
         })
+
+        initRecyclerView(binding, adapter)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -48,13 +53,21 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         // サーチボタンが押された時のリスナーの設定
         binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
             if (action == EditorInfo.IME_ACTION_SEARCH) {
+                // 入力されたテキストで検索を行う
                 viewModel.searchResults(editText.text.toString())
+                // 最終検索日時を更新する
+                updateLastSearchDate()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
+    }
 
-        // RecyclerView に設定
+    private fun initRecyclerView(binding: FragmentMainBinding, adapter: MainFragmentAdapter) {
+        // RecyclerView の登場人物を取得
+        val layoutManager = LinearLayoutManager(requireContext())
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), layoutManager.orientation)
+
         binding.recyclerView.also {
             it.layoutManager = layoutManager
             it.addItemDecoration(dividerItemDecoration)

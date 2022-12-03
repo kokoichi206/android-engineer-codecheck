@@ -9,6 +9,11 @@ import java.util.*
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     companion object {
+        // 最終検索日時
         var lastSearchDate: Date? = null
+
+        fun updateLastSearchDate() {
+            lastSearchDate = Date()
+        }
     }
 }

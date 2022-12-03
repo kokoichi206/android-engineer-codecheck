@@ -43,25 +43,14 @@
 
         <TextView
             android:id="@+id/languageView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
+            style="@style/DetailFragmentLeftText"
             app:layout_constraintTop_toBottomOf="@id/nameView"
             tools:ignore="MissingConstraints"
             tools:text="Written in Kotlin" />
 
         <TextView
             android:id="@+id/starsView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="12sp"
+            style="@style/DetailFragmentRightText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/centerGuid"
             app:layout_constraintTop_toBottomOf="@id/nameView"
@@ -69,13 +58,7 @@
 
         <TextView
             android:id="@+id/watchersView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="12sp"
+            style="@style/DetailFragmentRightText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/centerGuid"
             app:layout_constraintTop_toBottomOf="@id/starsView"
@@ -83,13 +66,7 @@
 
         <TextView
             android:id="@+id/forksView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="12sp"
+            style="@style/DetailFragmentRightText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/centerGuid"
             app:layout_constraintTop_toBottomOf="@id/watchersView"
@@ -97,13 +74,7 @@
 
         <TextView
             android:id="@+id/openIssuesView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="12sp"
+            style="@style/DetailFragmentRightText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/centerGuid"
             app:layout_constraintTop_toBottomOf="@id/forksView"
