@@ -1,27 +1,29 @@
 /*
  * Copyright © 2021 YUMEMI Inc. All rights reserved.
  */
-package jp.co.yumemi.android.code_check
+package jp.co.yumemi.android.code_check.presentation.main
 
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
-import jp.co.yumemi.android.code_check.MainActivity.Companion.updateLastSearchDate
-import jp.co.yumemi.android.code_check.data.GitHubAPI
-import jp.co.yumemi.android.code_check.data.repository.GitHubRepositoryImpl
+import dagger.hilt.android.AndroidEntryPoint
+import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentMainBinding
 import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import kotlinx.coroutines.launch
 
 /**
  * fragment_main の設定。
  */
+@AndroidEntryPoint
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,10 +31,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val binding = FragmentMainBinding.bind(view)
 
-        // DI: GitHubRepositoryImpl を利用する
-        // TODO: Dagger 使う
-        val api = GitHubAPI()
-        val viewModel = MainViewModel(GitHubRepositoryImpl(api))
+        val viewModel: MainViewModel by viewModels()
 
         val adapter = MainFragmentAdapter(object : MainFragmentAdapter.OnItemClickListener {
             override fun itemClick(item: Repository) {
@@ -42,7 +41,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         initRecyclerView(binding, adapter)
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     adapter.submitList(uiState.repositories)

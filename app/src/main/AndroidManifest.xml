@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     
     <application
+        android:name=".CodeCheckApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +14,7 @@
         android:theme="@style/Theme.AndroidEngineerCodeCheck"
         android:fullBackupContent="@xml/backup_descriptor">
         <activity
-            android:name="jp.co.yumemi.android.code_check.MainActivity"
+            android:name="jp.co.yumemi.android.code_check.presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
