@@ -25,9 +25,7 @@ import kotlinx.coroutines.launch
  * fragment_main の設定。
  */
 class MainFragment : Fragment(R.layout.fragment_main),
-    MainFragmentAdapter.OnItemClickListener, TextView.OnEditorActionListener {
-
-    private var viewModel: MainViewModel? = null
+    MainFragmentAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,7 +48,16 @@ class MainFragment : Fragment(R.layout.fragment_main),
         }
 
         // サーチボタンが押された時のリスナーの設定
-        binding.searchInputText.setOnEditorActionListener(this)
+        binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
+            if (action == EditorInfo.IME_ACTION_SEARCH) {
+                // 入力されたテキストで検索を行う
+                viewModel.searchResults(editText.text.toString())
+                // 最終検索日時を更新する
+                updateLastSearchDate()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
     }
 
     private fun initRecyclerView(binding: FragmentMainBinding, adapter: MainFragmentAdapter) {
@@ -72,16 +79,5 @@ class MainFragment : Fragment(R.layout.fragment_main),
     private fun gotoDetailFragment(item: Repository) {
         val action = MainFragmentDirections.actionRepositoriesFragmentToRepositoryFragment(item = item)
         findNavController().navigate(action)
-    }
-
-    override fun onEditorAction(editText: TextView?, action: Int, event: KeyEvent?): Boolean {
-        if (action == EditorInfo.IME_ACTION_SEARCH) {
-            // 入力されたテキストで検索を行う
-            viewModel?.searchResults(editText?.text.toString())
-            // 最終検索日時を更新する
-            updateLastSearchDate()
-            return true
-        }
-        return false
     }
 }
