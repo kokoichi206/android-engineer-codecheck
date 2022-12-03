@@ -6,16 +6,19 @@ package jp.co.yumemi.android.code_check.presentation.main
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.data.repository.GitHubRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * MainFragment で使用。
  */
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     private val repository: GitHubRepository,
 ) : ViewModel() {
 
