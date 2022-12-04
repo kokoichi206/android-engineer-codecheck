@@ -208,9 +208,8 @@ class AppEndToEnd {
         // メイン画面が表示されていること
         searchBar.assertExists()
         searchResult.assertExists()
-        // 検索文字列が消えていること
-        // FIXME: 検索文字列を残したい
-        searchBar.assertTextContains("GitHub のリポジトリを検索できるよー")
+        // 検索文字列が消えていないこと
+        searchBar.assertTextContains("test3")
         // 検索結果が消えていないこと
         searchResult.onChildren().assertCountEquals(2)
     }

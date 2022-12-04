@@ -32,6 +32,10 @@ fun MainView(
                 .fillMaxSize()
         ) {
             SearchBar(
+                text = uiState.searchInput,
+                onValueChange = {
+                    viewModel.setSearchInput(it)
+                },
                 onSearch = {
                     viewModel.searchResults(it)
                     updateLastSearchDate()

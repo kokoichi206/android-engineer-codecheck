@@ -27,9 +27,10 @@ import jp.co.yumemi.android.code_check.presentation.util.TestTags
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
+    text: String,
+    onValueChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {},
 ) {
-    var text by remember { mutableStateOf("") }
 
     OutlinedTextField(
         modifier = Modifier
@@ -40,7 +41,7 @@ fun SearchBar(
             .background(Color.White)
             .testTag(TestTags.SEARCH_BAR),
         value = text,
-        onValueChange = { text = it },
+        onValueChange = { onValueChange(it) },
         placeholder = {
             Text(
                 modifier = Modifier
@@ -76,7 +77,7 @@ fun SearchBar(
             if (text.isNotEmpty()) {
                 IconButton(
                     onClick = {
-                        text = ""
+                        onValueChange("")
                     }
                 ) {
                     Icon(
@@ -97,5 +98,11 @@ fun SearchBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    SearchBar()
+    SearchBar(text = "")
+}
+
+@Preview
+@Composable
+fun SearchBarWithTextPreview() {
+    SearchBar(text = "Kotlin")
 }

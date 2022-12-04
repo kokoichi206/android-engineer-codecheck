@@ -53,4 +53,8 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun setSearchInput(inputText: String) {
+        _uiState.update { it.copy(searchInput = inputText) }
+    }
 }
