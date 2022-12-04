@@ -3,13 +3,16 @@
  */
 package jp.co.yumemi.android.code_check.presentation
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.presentation.main.MainView
+import jp.co.yumemi.android.code_check.presentation.theme.CustomTheme
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : ComponentActivity() {
 
     companion object {
         // 最終検索日時
@@ -17,6 +20,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         fun updateLastSearchDate() {
             lastSearchDate = Date()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            CustomTheme {
+                Navigation()
+            }
         }
     }
 }
