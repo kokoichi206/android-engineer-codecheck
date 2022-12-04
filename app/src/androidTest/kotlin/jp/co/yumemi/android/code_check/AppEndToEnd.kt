@@ -1,22 +1,20 @@
 package jp.co.yumemi.android.code_check
 
-import android.text.Editable
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
-import androidx.core.view.get
-import androidx.core.view.size
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.material.textfield.TextInputEditText
+import androidx.activity.compose.setContent
+import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.test.espresso.Espresso
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import jp.co.yumemi.android.code_check.data.MockGitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.di.AppModule
 import jp.co.yumemi.android.code_check.presentation.MainActivity
+import jp.co.yumemi.android.code_check.presentation.Navigation
+import jp.co.yumemi.android.code_check.presentation.util.TestTags
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,17 +27,15 @@ class AppEndToEnd {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val activityScenarioRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
-
-    private lateinit var activity: MainActivity
+    val composeRule = createAndroidComposeRule<MainActivity>()
 
     @Before
     fun setUp() {
         hiltRule.inject()
         MockGitHubRepositoryImpl.initMock()
 
-        activityScenarioRule.scenario.onActivity {
-            activity = it
+        composeRule.activity.setContent {
+            Navigation()
         }
     }
 
@@ -51,41 +47,36 @@ class AppEndToEnd {
     @Test
     fun `main_fragment_show_correctly`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test")
-        }
+        searchBar.performTextInput("test")
 
         // Assert
-        assertEquals("test", searchInput.text.toString())
-        assertEquals(0, recyclerView.size)
+        searchBar.assertTextEquals("test")
+        searchResult.onChildren().assertCountEquals(0)
     }
 
     @Test
     fun `search_repositories_work_correctly`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test")
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
+        searchBar.performTextInput("test")
+        // 対象とする IME Action は勝手に選ばれる
+        searchBar.performImeAction()
 
         // Assert
-        assertEquals("test", searchInput.text.toString())
+        searchBar.assertTextEquals("test")
         // Mock で用意した数表示されていること
-        assertEquals(2, recyclerView.size)
+        searchResult.onChildren().assertCountEquals(2)
 
         assertEquals(1, MockGitHubRepositoryImpl.counter)
         assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
@@ -94,21 +85,18 @@ class AppEndToEnd {
     @Test
     fun `search_repositories_with_empty_text_field_should_not_call_api`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
+        searchBar.performImeAction()
 
         // Assert
-        assertEquals("", searchInput.text.toString())
-        assertEquals(0, recyclerView.size)
+        // hint が表示されていること
+        searchBar.assertTextContains("GitHub のリポジトリを検索できるよー")
+        searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されてないこと
         assertEquals(0, MockGitHubRepositoryImpl.counter)
@@ -118,25 +106,21 @@ class AppEndToEnd {
     @Test
     fun `search_repositories_when_exception_occurs_should_not_crash`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
         // API (正確には Repository) で擬似的にエラーを吐かせる
         MockGitHubRepositoryImpl.error = Exception("My Custom Exception")
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test2")
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
+        searchBar.performTextInput("test2")
+        searchBar.performImeAction()
 
         // Assert
-        assertEquals("test2", searchInput.text.toString())
+        searchBar.assertTextEquals("test2")
         // API のレスポンスがないので、リストは更新されていない
-        assertEquals(0, recyclerView.size)
+        searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されていること
         assertEquals(1, MockGitHubRepositoryImpl.counter)
@@ -146,114 +130,88 @@ class AppEndToEnd {
     @Test
     fun `tap_a_repository_navigate_to_detail_screen`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
         // 検索結果一覧を用意
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test2")
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
+        searchBar.performTextInput("test2")
+        searchBar.performImeAction()
 
-        val item = recyclerView[0]
+        val item = searchResult.onChildren()[0]
 
-        var viewInDetail = activity.findViewById<TextView>(R.id.languageView)
-        assertNull(viewInDetail)
+        val viewInDetail = composeRule.onNodeWithTag(TestTags.DETAIL_VIEW)
+        viewInDetail.assertDoesNotExist()
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            item.performClick()
-        }
-        instrumentation.waitForIdleSync()
+        item.performClick()
 
         // Assert
         // fragment_detail の一要素から判断する
-        viewInDetail = activity.findViewById<TextView>(R.id.languageView)
-        assertNotNull(viewInDetail)
+        viewInDetail.assertExists()
     }
 
     @Test
     fun `navigated_detail_screen_show_correctly`() {
         // Arrange
-        val searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        val recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNotNull(recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
         // 検索結果一覧を用意
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test2")
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
-        val item = recyclerView[0]
+        searchBar.performTextInput("test2")
+        searchBar.performImeAction()
+        val item = searchResult.onChildren()[0]
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            item.performClick()
-        }
-        instrumentation.waitForIdleSync()
+        item.performClick()
 
         // Assert
-        val nameView = activity.findViewById<TextView>(R.id.nameView)
-        assertEquals("actions-marketplace-validations/kokoichi206_action-URL-watcher", nameView.text)
-        val languageView = activity.findViewById<TextView>(R.id.languageView)
-        assertEquals("Written in Kotlin", languageView.text)
-        val starsView = activity.findViewById<TextView>(R.id.starsView)
-        assertEquals("1 stars", starsView.text)
-        val watchersView = activity.findViewById<TextView>(R.id.watchersView)
-        assertEquals("2 watchers", watchersView.text)
-        val forksView = activity.findViewById<TextView>(R.id.forksView)
-        assertEquals("3 forks", forksView.text)
-        val openIssuesView = activity.findViewById<TextView>(R.id.openIssuesView)
-        assertEquals("4 open issues", openIssuesView.text)
+        composeRule.onNodeWithTag(TestTags.DETAIL_NAME)
+            .assertTextEquals("actions-marketplace-validations/kokoichi206_action-URL-watcher")
+        composeRule.onNodeWithTag(TestTags.DETAIL_LANGUAGE)
+            .assertTextEquals("Written in Kotlin")
+        composeRule.onNodeWithTag(TestTags.DETAIL_STARS)
+            .assertTextEquals("1 stars")
+        composeRule.onNodeWithTag(TestTags.DETAIL_WATCHERS)
+            .assertTextEquals("2 watchers")
+        composeRule.onNodeWithTag(TestTags.DETAIL_FORKS)
+            .assertTextEquals("3 forks")
+        composeRule.onNodeWithTag(TestTags.DETAIL_ISSUES)
+            .assertTextEquals("4 open issues")
     }
 
     @Test
     fun `back_key_in_navigated_detail_screen_should_return_main_screen`() {
         // Arrange
-        var searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        var recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
         // 検索結果一覧を用意
-        activityScenarioRule.scenario.onActivity {
-            searchInput.text = Editable.Factory.getInstance().newEditable("test3")
-            searchInput.onEditorAction(EditorInfo.IME_ACTION_SEARCH)
-        }
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        instrumentation.waitForIdleSync()
+        searchBar.performTextInput("test3")
+        searchBar.performImeAction()
         // 一覧から1つ目の要素をクリックする
-        activityScenarioRule.scenario.onActivity {
-            val item = recyclerView[0]
-            item.performClick()
-        }
-        instrumentation.waitForIdleSync()
+        val item = searchResult.onChildren()[0]
+        item.performClick()
         // 詳細画面にいることを確認する
-        var viewInDetail = activity.findViewById<TextView>(R.id.languageView)
-        assertNotNull(viewInDetail)
-        recyclerView = activity.findViewById<RecyclerView>(R.id.recyclerView)
-        assertNull(recyclerView)
+        val viewInDetail = composeRule.onNodeWithTag(TestTags.DETAIL_VIEW)
+        viewInDetail.assertExists()
+        searchBar.assertDoesNotExist()
 
         // Act
-        activityScenarioRule.scenario.onActivity {
-            // バックキーが押されたと仮定
-            activity.onBackPressed()
-        }
-        instrumentation.waitForIdleSync()
+        Espresso.pressBack()
 
         // Assert
         // 詳細画面が表示されていないこと
-        viewInDetail = activity.findViewById(R.id.languageView)
-        assertNull(viewInDetail)
+        viewInDetail.assertDoesNotExist()
         // メイン画面が表示されていること
-        searchInput = activity.findViewById<TextInputEditText>(R.id.searchInputText)
-        assertNotNull(searchInput)
-        recyclerView = activity.findViewById(R.id.recyclerView)
-        assertNotNull(recyclerView)
-        // 検索文字列・結果が消えていないこと
-        assertEquals("test3", searchInput.text.toString())
-        assertEquals(2, recyclerView.size)
+        searchBar.assertExists()
+        searchResult.assertExists()
+        // 検索文字列が消えていること
+        // FIXME: 検索文字列を残したい
+        searchBar.assertTextContains("GitHub のリポジトリを検索できるよー")
+        // 検索結果が消えていないこと
+        searchResult.onChildren().assertCountEquals(2)
     }
 }

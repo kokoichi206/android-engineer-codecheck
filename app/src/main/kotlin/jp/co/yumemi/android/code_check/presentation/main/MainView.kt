@@ -7,12 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.SearchBar
+import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
 fun MainView(
@@ -36,7 +38,10 @@ fun MainView(
                 }
             )
 
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .testTag(TestTags.SEARCH_RESULT)
+            ) {
                 items(uiState.repositories) { item ->
                     OneRepository(repository = item, onRepositoryClick = onRepositoryClick)
                 }

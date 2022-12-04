@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,12 +21,14 @@ import coil.request.ImageRequest
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.detail.component.RightNumberInfo
+import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
 fun DetailView(repository: Repository) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag(TestTags.DETAIL_VIEW),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
@@ -42,7 +45,8 @@ fun DetailView(repository: Repository) {
         )
 
         Text(
-            modifier = Modifier,
+            modifier = Modifier
+                .testTag(TestTags.DETAIL_NAME),
             text = repository.name,
             color = MaterialTheme.colorScheme.onBackground,
             fontSize = 24.sp,
@@ -54,7 +58,8 @@ fun DetailView(repository: Repository) {
         ) {
             Text(
                 modifier = Modifier
-                    .weight(1f),
+                    .weight(1f)
+                    .testTag(TestTags.DETAIL_LANGUAGE),
                 text = stringResource(id = R.string.written_language, repository.language),
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp,
@@ -63,7 +68,8 @@ fun DetailView(repository: Repository) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
+                    .weight(1f)
+                    .testTag(TestTags.DETAIL_STARS),
                 text = stringResource(id = R.string.detail_stars, repository.stargazersCount),
                 style = TextStyle(
                     textAlign = TextAlign.End,
@@ -74,15 +80,18 @@ fun DetailView(repository: Repository) {
         }
 
         RightNumberInfo(
-            text = stringResource(id = R.string.detail_watchers, repository.watchersCount)
+            text = stringResource(id = R.string.detail_watchers, repository.watchersCount),
+            tag = TestTags.DETAIL_WATCHERS,
         )
 
         RightNumberInfo(
-            text = stringResource(id = R.string.detail_forks, repository.forksCount)
+            text = stringResource(id = R.string.detail_forks, repository.forksCount),
+            tag = TestTags.DETAIL_FORKS,
         )
 
         RightNumberInfo(
-            text = stringResource(id = R.string.detail_open_issues, repository.openIssuesCount)
+            text = stringResource(id = R.string.detail_open_issues, repository.openIssuesCount),
+            tag = TestTags.DETAIL_ISSUES,
         )
     }
 }

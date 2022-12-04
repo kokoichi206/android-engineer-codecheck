@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,8 +17,9 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun RightNumberInfo(
-    text: String,
     modifier: Modifier = Modifier,
+    text: String,
+    tag: String = "",
 ) {
     Row(
         modifier = modifier
@@ -29,7 +31,8 @@ fun RightNumberInfo(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag(tag),
             text = text,
             style = TextStyle(
                 textAlign = TextAlign.End,
