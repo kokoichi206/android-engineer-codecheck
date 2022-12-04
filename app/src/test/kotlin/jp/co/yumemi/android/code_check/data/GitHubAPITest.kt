@@ -4,6 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import io.ktor.utils.io.*
+import jp.co.yumemi.android.code_check.data.remote.GitHubAPI
 import jp.co.yumemi.android.code_check.models.Repository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*

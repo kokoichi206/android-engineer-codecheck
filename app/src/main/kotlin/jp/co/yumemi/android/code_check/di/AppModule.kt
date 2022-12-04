@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jp.co.yumemi.android.code_check.data.GitHubAPI
+import jp.co.yumemi.android.code_check.data.remote.GitHubAPI
 import jp.co.yumemi.android.code_check.data.repository.GitHubRepository
 import jp.co.yumemi.android.code_check.data.repository.GitHubRepositoryImpl
 import javax.inject.Singleton
