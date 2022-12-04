@@ -172,13 +172,13 @@ class AppEndToEnd {
         composeRule.onNodeWithTag(TestTags.DETAIL_LANGUAGE)
             .assertTextEquals("Written in Kotlin")
         composeRule.onNodeWithTag(TestTags.DETAIL_STARS)
-            .assertTextEquals("1 stars")
+            .assertTextEquals("Stars")
         composeRule.onNodeWithTag(TestTags.DETAIL_WATCHERS)
-            .assertTextEquals("2 watchers")
+            .assertTextEquals("Watchers")
         composeRule.onNodeWithTag(TestTags.DETAIL_FORKS)
-            .assertTextEquals("3 forks")
+            .assertTextEquals("Forks")
         composeRule.onNodeWithTag(TestTags.DETAIL_ISSUES)
-            .assertTextEquals("4 open issues")
+            .assertTextEquals("Open issues")
     }
 
     @Test

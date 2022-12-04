@@ -4,8 +4,8 @@
     <string name="written_language">Written in %s</string>
 
     <!--fragment_detail で使う-->
-    <string name="detail_stars">%d stars</string>
-    <string name="detail_watchers">%d watchers</string>
-    <string name="detail_forks">%d forks</string>
-    <string name="detail_open_issues">%d open issues</string>
+    <string name="detail_stars">Stars</string>
+    <string name="detail_watchers">Watchers</string>
+    <string name="detail_forks">Forks</string>
+    <string name="detail_open_issues">Open issues</string>
 </resources>

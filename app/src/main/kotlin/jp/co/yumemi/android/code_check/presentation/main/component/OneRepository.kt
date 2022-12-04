@@ -2,6 +2,7 @@ package jp.co.yumemi.android.code_check.presentation.main.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.presentation.theme.Colors
 
 @Composable
 fun OneRepository(
@@ -72,11 +74,7 @@ fun OneRepository(
             )
         }
     }
-    androidx.compose.material.Divider(
-        modifier = Modifier
-            .padding(0.dp),
-        color = MaterialTheme.colorScheme.onBackground,
-    )
+    Divider(color = Colors.Divider)
 }
 
 @Preview(

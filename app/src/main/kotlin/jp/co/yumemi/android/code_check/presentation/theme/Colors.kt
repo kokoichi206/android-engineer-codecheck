@@ -5,7 +5,13 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val PrimaryBlue = Color(0xFF1BA6E1)
+private val PrimaryBlue = Color(0xFF1BA6E1)
+
+object Colors {
+    val TextGray = Color.Gray
+    val Divider = Color.Gray
+    val Icon = Color.Gray
+}
 
 @SuppressLint("ConflictingOnColor")
 val myLightColorScheme = lightColorScheme(

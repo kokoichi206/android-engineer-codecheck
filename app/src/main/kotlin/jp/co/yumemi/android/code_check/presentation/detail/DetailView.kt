@@ -1,6 +1,7 @@
 package jp.co.yumemi.android.code_check.presentation.detail
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,7 +20,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
-import jp.co.yumemi.android.code_check.presentation.detail.component.RightNumberInfo
+import jp.co.yumemi.android.code_check.presentation.detail.component.NumberInfo
+import jp.co.yumemi.android.code_check.presentation.theme.Colors
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
@@ -43,7 +44,6 @@ fun DetailView(repository: Repository) {
             modifier = Modifier
                 .padding(12.dp),
         )
-
         Text(
             modifier = Modifier
                 .testTag(TestTags.DETAIL_NAME),
@@ -52,51 +52,59 @@ fun DetailView(repository: Repository) {
             fontSize = 24.sp,
         )
 
-        Row(
+        Column(
             modifier = Modifier
-                .padding(4.dp)
+                .padding(horizontal = 32.dp)
         ) {
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag(TestTags.DETAIL_LANGUAGE),
-                text = stringResource(id = R.string.written_language, repository.language),
-                color = MaterialTheme.colorScheme.onBackground,
-                fontSize = 16.sp,
-            )
 
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .testTag(TestTags.DETAIL_STARS),
-                text = stringResource(id = R.string.detail_stars, repository.stargazersCount),
-                style = TextStyle(
-                    textAlign = TextAlign.End,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                ),
+                    .testTag(TestTags.DETAIL_LANGUAGE),
+                text = stringResource(id = R.string.written_language, repository.language),
+                color = Colors.TextGray,
+                fontSize = 16.sp,
+                textAlign = TextAlign.End,
             )
+
+            NumberInfo(
+                key = stringResource(id = R.string.detail_stars),
+                value = repository.watchersCount,
+                tag = TestTags.DETAIL_STARS,
+                iconId = R.drawable.star,
+            )
+            Divider(color = Colors.Divider)
+
+            NumberInfo(
+                key = stringResource(id = R.string.detail_watchers),
+                value = repository.watchersCount,
+                tag = TestTags.DETAIL_WATCHERS,
+                iconId = R.drawable.watch,
+            )
+            Divider(color = Colors.Divider)
+
+            NumberInfo(
+                key = stringResource(id = R.string.detail_forks),
+                value = repository.forksCount,
+                tag = TestTags.DETAIL_FORKS,
+                iconId = R.drawable.fork,
+            )
+            Divider(color = Colors.Divider)
+
+            NumberInfo(
+                key = stringResource(id = R.string.detail_open_issues),
+                value = repository.openIssuesCount,
+                tag = TestTags.DETAIL_ISSUES,
+                iconId = R.drawable.issue,
+            )
+            Divider(color = Colors.Divider)
         }
-
-        RightNumberInfo(
-            text = stringResource(id = R.string.detail_watchers, repository.watchersCount),
-            tag = TestTags.DETAIL_WATCHERS,
-        )
-
-        RightNumberInfo(
-            text = stringResource(id = R.string.detail_forks, repository.forksCount),
-            tag = TestTags.DETAIL_FORKS,
-        )
-
-        RightNumberInfo(
-            text = stringResource(id = R.string.detail_open_issues, repository.openIssuesCount),
-            tag = TestTags.DETAIL_ISSUES,
-        )
     }
 }
 
-@Preview
+@Preview(
+    showBackground = true,
+)
 @Composable
 fun DetailViewPreview() {
     val repository = Repository(
