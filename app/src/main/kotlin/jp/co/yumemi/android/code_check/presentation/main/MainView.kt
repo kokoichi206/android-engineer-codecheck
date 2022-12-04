@@ -8,19 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.SearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainView() {
+fun MainView(
+    onRepositoryClick: (Repository) -> Unit = {},
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,7 +39,7 @@ fun MainView() {
         },
         containerColor = MaterialTheme.colorScheme.background,
     ) {
-        SearchView(paddingValues = it)
+        SearchView(paddingValues = it, onRepositoryClick = onRepositoryClick)
     }
 }
 
@@ -45,6 +47,7 @@ fun MainView() {
 fun SearchView(
     viewModel: MainViewModel = hiltViewModel(),
     paddingValues: PaddingValues = PaddingValues(0.dp),
+    onRepositoryClick: (Repository) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -66,7 +69,7 @@ fun SearchView(
 
             LazyColumn {
                 items(uiState.repositories) { item ->
-                    OneRepository(name = item.name)
+                    OneRepository(repository = item, onRepositoryClick = onRepositoryClick)
                 }
             }
         }
