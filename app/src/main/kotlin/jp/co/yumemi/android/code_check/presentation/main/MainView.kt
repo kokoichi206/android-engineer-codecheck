@@ -8,6 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.models.Repository
@@ -67,7 +69,12 @@ fun MainView(
                             viewModel.setShowRecent(false)
                         },
                         onItemClick = {
-                            viewModel.setSearchInput(it)
+                            viewModel.setSearchInput(
+                                TextFieldValue(
+                                    text = it,
+                                    selection = TextRange(it.length),
+                                )
+                            )
                         },
                     )
                 }

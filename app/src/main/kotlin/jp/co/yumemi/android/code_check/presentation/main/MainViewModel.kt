@@ -4,6 +4,7 @@
 package jp.co.yumemi.android.code_check.presentation.main
 
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,8 +55,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setSearchInput(inputText: String) {
-        if (inputText.isEmpty()) {
+    fun setSearchInput(inputText: TextFieldValue) {
+        if (inputText.text.isEmpty()) {
             _uiState.update { it.copy(repositories = emptyList()) }
         }
         _uiState.update { it.copy(searchInput = inputText) }
