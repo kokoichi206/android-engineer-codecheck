@@ -128,6 +128,34 @@ class AppEndToEnd {
     }
 
     @Test
+    fun `cancel_button_work_correctly`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
+        val cancelButton = composeRule.onNodeWithTag(TestTags.CANCEL_BUTTON)
+        cancelButton.assertDoesNotExist()
+
+        searchBar.performTextInput("test2")
+        searchBar.performImeAction()
+        searchBar.assertTextEquals("test2")
+        searchResult.onChildren().assertCountEquals(2)
+        // キャンセルボタンが表示されていること
+        cancelButton.assertExists()
+
+        // Act
+        cancelButton.performClick()
+
+        // Assert
+        // 検索文字列・結果が消えてること
+        searchBar.assertTextContains("GitHub のリポジトリを検索できるよー")
+        searchResult.onChildren().assertCountEquals(0)
+        // キャンセルボタンが表示されてないこと
+        cancelButton.assertDoesNotExist()
+    }
+
+    @Test
     fun `tap_a_repository_navigate_to_detail_screen`() {
         // Arrange
         val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)

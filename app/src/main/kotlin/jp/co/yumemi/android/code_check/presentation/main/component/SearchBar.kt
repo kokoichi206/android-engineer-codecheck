@@ -76,6 +76,8 @@ fun SearchBar(
         trailingIcon = {
             if (text.isNotEmpty()) {
                 IconButton(
+                    modifier = Modifier
+                        .testTag(TestTags.CANCEL_BUTTON),
                     onClick = {
                         onValueChange("")
                     }

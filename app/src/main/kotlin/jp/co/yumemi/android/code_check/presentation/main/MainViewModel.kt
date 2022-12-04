@@ -55,6 +55,9 @@ class MainViewModel @Inject constructor(
     }
 
     fun setSearchInput(inputText: String) {
+        if (inputText.isEmpty()) {
+            _uiState.update { it.copy(repositories = emptyList()) }
+        }
         _uiState.update { it.copy(searchInput = inputText) }
     }
 }

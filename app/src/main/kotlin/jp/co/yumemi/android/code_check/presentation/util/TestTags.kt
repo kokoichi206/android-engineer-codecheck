@@ -4,6 +4,7 @@ object TestTags {
     // In MainView
     const val SEARCH_BAR = "SEARCH_BAR"
     const val SEARCH_RESULT = "SEARCH_RESULT"
+    const val CANCEL_BUTTON = "CANCEL_BUTTON"
 
     // In DetailView
     const val DETAIL_VIEW = "DETAIL_VIEW"
