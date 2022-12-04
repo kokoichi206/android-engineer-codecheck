@@ -9,5 +9,6 @@ data class MainUiState(
     var searchInput: String = "",
     var isLoading: Boolean = false,
     var error: String = "",
-    var repositories: List<Repository> = emptyList()
+    var repositories: List<Repository> = emptyList(),
+    var showRecent: Boolean = true,
 )

@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
+import jp.co.yumemi.android.code_check.presentation.main.component.RecentSearched
 import jp.co.yumemi.android.code_check.presentation.main.component.SearchBar
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
@@ -35,19 +36,49 @@ fun MainView(
                 text = uiState.searchInput,
                 onValueChange = {
                     viewModel.setSearchInput(it)
+                    viewModel.setShowRecent(true)
                 },
                 onSearch = {
                     viewModel.searchResults(it)
                     updateLastSearchDate()
+                    viewModel.setShowRecent(true)
                 }
             )
 
-            LazyColumn(
+            // TODO: 過去の検索結果を表示させる
+            val recent = listOf(
+                "Kotlin",
+                "Go",
+                "Python",
+                "Shell",
+                "Android",
+                "Google",
+                "Architecture",
+            )
+            Box(
                 modifier = Modifier
-                    .testTag(TestTags.SEARCH_RESULT)
+                    .fillMaxSize(),
             ) {
-                items(uiState.repositories) { item ->
-                    OneRepository(repository = item, onRepositoryClick = onRepositoryClick)
+                // 最近の検索結果を表示する条件
+                if (uiState.repositories.isEmpty() && uiState.showRecent) {
+                    RecentSearched(
+                        searched = recent,
+                        onCloseClick = {
+                            viewModel.setShowRecent(false)
+                        },
+                        onItemClick = {
+                            viewModel.setSearchInput(it)
+                        },
+                    )
+                }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .testTag(TestTags.SEARCH_RESULT)
+                ) {
+                    items(uiState.repositories) { item ->
+                        OneRepository(repository = item, onRepositoryClick = onRepositoryClick)
+                    }
                 }
             }
         }

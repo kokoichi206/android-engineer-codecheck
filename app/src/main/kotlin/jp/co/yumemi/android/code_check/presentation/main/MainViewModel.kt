@@ -60,4 +60,8 @@ class MainViewModel @Inject constructor(
         }
         _uiState.update { it.copy(searchInput = inputText) }
     }
+
+    fun setShowRecent(showRecent: Boolean) {
+        _uiState.update { it.copy(showRecent = showRecent) }
+    }
 }
