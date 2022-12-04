@@ -1,14 +1,19 @@
 package jp.co.yumemi.android.code_check.presentation.detail
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -98,6 +103,26 @@ fun DetailView(repository: Repository) {
                 iconId = R.drawable.issue,
             )
             Divider(color = Colors.Divider)
+
+            val uriHandler = LocalUriHandler.current
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Image(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            uriHandler.openUri(repository.repoUrl)
+                        },
+                    painter = painterResource(id = R.drawable.github),
+                    contentDescription = "github icon",
+                )
+            }
         }
     }
 }
@@ -109,6 +134,7 @@ fun DetailView(repository: Repository) {
 fun DetailViewPreview() {
     val repository = Repository(
         name = "kokoichi206/kokoichi206",
+        repoUrl = "",
         ownerIconUrl = "https://avatars.githubusercontent.com/u/52474650?v=4",
         language = "Go",
         stargazersCount = 0,

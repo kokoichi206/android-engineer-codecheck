@@ -28,6 +28,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
         return listOf(
             Repository(
                 name = "actions-marketplace-validations/kokoichi206_action-URL-watcher",
+                repoUrl = "https://github.com/actions-marketplace-validations/kokoichi206_action-URL-watcher",
                 ownerIconUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
                 language = "Kotlin",
                 stargazersCount = 1,
@@ -37,6 +38,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
             ),
             Repository(
                 name = "kokoichi206/kokoichi206",
+                repoUrl = "https://github.com/kokoichi206/kokoichi206",
                 ownerIconUrl = "https://avatars.githubusercontent.com/u/52474650?v=4",
                 language = "Shell",
                 stargazersCount = 2,

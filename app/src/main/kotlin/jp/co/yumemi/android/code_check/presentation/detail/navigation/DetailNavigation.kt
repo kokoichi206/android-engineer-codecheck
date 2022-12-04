@@ -13,6 +13,7 @@ import jp.co.yumemi.android.code_check.presentation.util.Constants
 const val detailRoute = "detail_route"
 
 const val name = "name"
+const val repoUrl = "repoUrl"
 const val iconUrl = "icon_url"
 const val language = "language"
 const val stars = "stars"
@@ -26,13 +27,16 @@ fun NavController.navigateToDetailView(repository: Repository) {
     val icon = repository.ownerIconUrl
         .replace("/", Constants.SLASH_ENCODED)
         .replace("?", Constants.QUESTION_ENCODED)
+    val url = repository.repoUrl
+        .replace("/", Constants.SLASH_ENCODED)
+        .replace("?", Constants.QUESTION_ENCODED)
     val repoName = repository.name
         .replace("/", Constants.SLASH_ENCODED)
         .replace("?", Constants.QUESTION_ENCODED)
     this.navigateUp()
     this.navigate(
         detailRoute
-                + "/$name=${repoName}&$iconUrl=${icon}&$language=${repository.language}"
+                + "/$name=${repoName}&$repoUrl=${url}&$iconUrl=${icon}&$language=${repository.language}"
                 + "&$stars=${repository.stargazersCount}&$watchers=${repository.watchersCount}"
                 + "&$forks=${repository.forksCount}&$issues=${repository.openIssuesCount}"
     )
@@ -41,12 +45,13 @@ fun NavController.navigateToDetailView(repository: Repository) {
 fun NavGraphBuilder.detailView() {
     composable(
         route = detailRoute
-                + "/$name={${name}}&$iconUrl={${iconUrl}}&$language={${language}}"
+                + "/$name={${name}}&$repoUrl={${repoUrl}}&$iconUrl={${iconUrl}}&$language={${language}}"
                 + "&$stars={${stars}}&$watchers={${watchers}}"
                 + "&$forks={${forks}}&$issues={${issues}}",
 
         arguments = listOf(
             navArgument(name) { type = NavType.StringType },
+            navArgument(repoUrl) { type = NavType.StringType },
             navArgument(iconUrl) { type = NavType.StringType },
             navArgument(language) { type = NavType.StringType },
             navArgument(stars) { type = NavType.LongType },
@@ -59,6 +64,9 @@ fun NavGraphBuilder.detailView() {
         val name = backStackEntry.arguments?.getString(name)
             ?.replace(Constants.SLASH_ENCODED, "/")
             ?.replace(Constants.QUESTION_ENCODED, "?") ?: ""
+        val repoUrl = backStackEntry.arguments?.getString(repoUrl)
+            ?.replace(Constants.SLASH_ENCODED, "/")
+            ?.replace(Constants.QUESTION_ENCODED, "?") ?: ""
         val iconUrl = backStackEntry.arguments?.getString(iconUrl)
             ?.replace(Constants.SLASH_ENCODED, "/")
             ?.replace(Constants.QUESTION_ENCODED, "?") ?: ""
@@ -69,6 +77,7 @@ fun NavGraphBuilder.detailView() {
         val issues = backStackEntry.arguments?.getLong(issues) ?: 0L
         val repository = Repository(
             name = name,
+            repoUrl = repoUrl,
             ownerIconUrl = iconUrl,
             language = language,
             stargazersCount = stars,

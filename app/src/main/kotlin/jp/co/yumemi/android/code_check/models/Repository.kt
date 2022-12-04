@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Repository(
     val name: String,
+    val repoUrl: String,
     val ownerIconUrl: String,
     val language: String,
     val stargazersCount: Long,
