@@ -11,6 +11,6 @@ fun NavGraphBuilder.mainView(
     onRepositoryClick: (Repository) -> Unit,
 ) {
     composable(route = mainRoute) {
-        MainView(onRepositoryClick)
+        MainView(onRepositoryClick = onRepositoryClick)
     }
 }
