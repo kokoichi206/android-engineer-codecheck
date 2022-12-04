@@ -46,7 +46,7 @@ fun NumberInfo(
             style = TextStyle(
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.secondary,
             )
         )
 
