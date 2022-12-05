@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -53,6 +54,8 @@ fun MainView(
         }
     }
 
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,6 +75,8 @@ fun MainView(
                     viewModel.searchResults(it)
                     updateLastSearchDate()
                     viewModel.setShowRecent(true)
+                    // 検索実行時にキーボードを閉じる
+                    focusManager.clearFocus()
                 }
             )
 
@@ -96,6 +101,8 @@ fun MainView(
                             )
                             // 検索まで行う
                             viewModel.searchResults(it)
+                            // 検索実行時にキーボードを閉じる
+                            focusManager.clearFocus()
                         },
                         onItemReflectClick = {
                             // 検索バーに表示するだけ

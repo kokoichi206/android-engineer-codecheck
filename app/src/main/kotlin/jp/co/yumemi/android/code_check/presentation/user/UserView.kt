@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -67,6 +68,8 @@ fun UserViewMain(
         }
     }
 
+    val focusManager = LocalFocusManager.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,6 +86,8 @@ fun UserViewMain(
                 },
                 onSearch = {
                     onSearch(it)
+                    // 検索実行時にキーボードを閉じる
+                    focusManager.clearFocus()
                 }
             )
 
