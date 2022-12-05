@@ -2,6 +2,7 @@ package jp.co.yumemi.android.code_check.presentation.main.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,7 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,7 +66,7 @@ fun RecentSearched(
                         .clickable {
                             onCloseClick()
                         }
-                    .testTag(TestTags.RECENT_SEARCHED_CLOSE),
+                        .testTag(TestTags.RECENT_SEARCHED_CLOSE),
                 contentDescription = "close recent",
                     tint = Color.White,
                 )
@@ -91,9 +94,13 @@ fun RecentSearched(
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(45f)
-                        .clickable {
-                            onItemClick(str)
-                        }
+                        .clickable(
+                            onClick = {
+                                onItemClick(str)
+                            },
+                            indication = rememberRipple(bounded = false),
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
                         .testTag("${TestTags.REFLECT_SEARCH_BAR_PREFIX}_$str"),
                     contentDescription = "close recent",
                     tint = iconColor,
