@@ -1,6 +1,7 @@
 package jp.co.yumemi.android.code_check.util
 
 import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.models.User
 import org.json.JSONObject
 
 /**
@@ -28,5 +29,25 @@ fun JSONObject.toRepository(): Repository {
         watchersCount = watchersCount,
         forksCount = forksCount,
         openIssuesCount = openIssuesCount
+    )
+}
+
+/**
+ * GitHub API から取得される JSON から [User] を取得する。
+ *
+ * see documentation:
+ * https://docs.github.com/ja/rest/search?apiVersion=2022-11-28#search-users
+ */
+fun JSONObject.toUser(): User {
+    val name = optString("login")
+    val avatarUrl = optString("avatar_url")
+    val htmlUrl = optString("html_url")
+    val type = optString("type")
+
+    return User(
+        name = name,
+        avatarUrl = avatarUrl,
+        htmlUrl = htmlUrl,
+        type = type,
     )
 }
