@@ -64,13 +64,25 @@ fun MainView(
                             viewModel.setShowRecent(false)
                         },
                         onItemClick = {
+                            // 検索バーに表示
                             viewModel.setSearchInput(
                                 TextFieldValue(
                                     text = it,
                                     selection = TextRange(it.length),
                                 )
                             )
+                            // 検索まで行う
+                            viewModel.searchResults(it)
                         },
+                        onItemReflectClick = {
+                            // 検索バーに表示するだけ
+                            viewModel.setSearchInput(
+                                TextFieldValue(
+                                    text = it,
+                                    selection = TextRange(it.length),
+                                )
+                            )
+                        }
                     )
                 }
 

@@ -34,6 +34,7 @@ fun RecentSearched(
     searched: List<String>,
     onCloseClick: () -> Unit = {},
     onItemClick: (String) -> Unit = {},
+    onItemReflectClick: (String) -> Unit = {},
 ) {
     val iconColor = Color.Gray.copy(alpha = 0.4f)
 
@@ -67,7 +68,7 @@ fun RecentSearched(
                             onCloseClick()
                         }
                         .testTag(TestTags.RECENT_SEARCHED_CLOSE),
-                contentDescription = "close recent",
+                    contentDescription = "close recent",
                     tint = Color.White,
                 )
             }
@@ -75,7 +76,12 @@ fun RecentSearched(
 
         items(searched) { str ->
             Row(
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                modifier = Modifier
+                    .clickable {
+                        onItemClick(str)
+                    }
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .testTag("${TestTags.RECENT_SEARCH_STR_ROW_PREFIX}_$str"),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -96,7 +102,7 @@ fun RecentSearched(
                         .rotate(45f)
                         .clickable(
                             onClick = {
-                                onItemClick(str)
+                                onItemReflectClick(str)
                             },
                             indication = rememberRipple(bounded = false),
                             interactionSource = remember { MutableInteractionSource() }

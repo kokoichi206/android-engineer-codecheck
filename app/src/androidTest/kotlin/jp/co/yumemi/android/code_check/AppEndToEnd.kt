@@ -177,8 +177,6 @@ class AppEndToEnd {
         val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
         val recent = composeRule.onNodeWithTag(TestTags.RECENT_SEARCHED)
         recent.assertExists()
-        val searchedResult = composeRule.onNodeWithTag("${TestTags.SEARCH_RECENT_RESULT_PREFIX}_$query")
-        searchedResult.assertDoesNotExist()
         val searchedReflect = composeRule.onNodeWithTag("${TestTags.REFLECT_SEARCH_BAR_PREFIX}_$query")
         searchedReflect.assertDoesNotExist()
 
@@ -193,7 +191,10 @@ class AppEndToEnd {
         recent.assertExists()
         // 直近の検索結果に、履歴が表示されていること
         searchedReflect.assertExists()
-        searchedResult.assertTextEquals(query)
+        composeRule.onNodeWithTag(
+            testTag = "${TestTags.SEARCH_RECENT_RESULT_PREFIX}_$query",
+            useUnmergedTree = true,
+        ).assertTextEquals(query)
     }
 
     @Test
@@ -231,6 +232,35 @@ class AppEndToEnd {
         // Assert
         // 検索バーに、期待値通り文言が表示されていること
         searchBar.assertTextEquals(query)
+    }
+
+    @Test
+    fun `show_recent_searched_name_work_correctly`() {
+        // Arrange
+        val query = "show_recent_reflect_correctly_query"
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        val searchedRow = composeRule.onNodeWithTag("${TestTags.RECENT_SEARCH_STR_ROW_PREFIX}_$query")
+        // 検索履歴用意
+        searchBar.performTextInput(query)
+        searchBar.performImeAction()
+        MockGitHubRepositoryImpl.initMock()
+        // 検索文字列削除
+        composeRule.onNodeWithTag(TestTags.CANCEL_BUTTON).performClick()
+
+        // Act
+        // 対象の行を押す
+        searchedRow.performClick()
+
+        // Assert
+        // 検索バーに、期待値通り文言が表示されていること
+        searchBar.assertTextEquals(query)
+        // API のレスポンスにより、リストが更新されていること
+        searchResult.onChildren().assertCountEquals(2)
+
+        // API が呼び出されていること
+        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(query, MockGitHubRepositoryImpl.passedQuery)
     }
 
     @Test
