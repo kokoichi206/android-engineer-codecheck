@@ -9,8 +9,12 @@ const val mainRoute = "main_route"
 
 fun NavGraphBuilder.mainView(
     onRepositoryClick: (Repository) -> Unit,
+    onScroll: (Int) -> Unit = {},
 ) {
     composable(route = mainRoute) {
-        MainView(onRepositoryClick = onRepositoryClick)
+        MainView(onRepositoryClick = onRepositoryClick,
+            onScroll = {
+                onScroll(it)
+            })
     }
 }
