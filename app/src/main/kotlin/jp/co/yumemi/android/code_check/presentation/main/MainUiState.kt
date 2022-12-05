@@ -12,4 +12,5 @@ data class MainUiState(
     var error: String = "",
     var repositories: List<Repository> = emptyList(),
     var showRecent: Boolean = true,
+    var recent: List<String> = emptyList(),
 )

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,6 +27,10 @@ fun MainView(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(true) {
+        viewModel.fetchSearchRecent()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -47,16 +52,6 @@ fun MainView(
                 }
             )
 
-            // TODO: 過去の検索結果を表示させる
-            val recent = listOf(
-                "Kotlin",
-                "Go",
-                "Python",
-                "Shell",
-                "Android",
-                "Google",
-                "Architecture",
-            )
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -64,7 +59,7 @@ fun MainView(
                 // 最近の検索結果を表示する条件
                 if (uiState.repositories.isEmpty() && uiState.showRecent) {
                     RecentSearched(
-                        searched = recent,
+                        searched = uiState.recent,
                         onCloseClick = {
                             viewModel.setShowRecent(false)
                         },
