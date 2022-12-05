@@ -8,6 +8,10 @@ import jp.co.yumemi.android.code_check.data.local.model.SearchEntity
 @Dao
 interface SearchDao {
 
+    /**
+     * 検索候補として表示する文字列を取得する。
+     * 成功した API 検索のうち、上位 10 件を多い順に取得。
+     */
     @Query(
         value = """
             SELECT `query` FROM SearchEntity
