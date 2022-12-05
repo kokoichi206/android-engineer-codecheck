@@ -9,6 +9,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import jp.co.yumemi.android.code_check.data.MockGitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.di.AppModule
+import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.presentation.BottomNavItem
 import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.Navigation
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
@@ -40,6 +42,24 @@ class AppEndToEnd {
     @After
     fun tearDown() {
         MockGitHubRepositoryImpl.initMock()
+    }
+
+    @Test
+    fun `tap_nav_item_can_navigate_correctly`() {
+        // Arrange
+        val userItem = composeRule.onNodeWithTag("${TestTags.BOTTOM_ITEM_PREFIX}_${BottomNavItem.User.name}")
+        val mainView = composeRule.onNodeWithTag(TestTags.MAIN_VIEW)
+        val userView = composeRule.onNodeWithTag(TestTags.USER_VIEW)
+        mainView.assertExists()
+        userView.assertDoesNotExist()
+
+        // Act
+        userItem.performClick()
+
+        // Assert
+        // ユーザー画面に遷移していること
+        mainView.assertDoesNotExist()
+        userView.assertExists()
     }
 
     @Test
@@ -97,5 +117,38 @@ class AppEndToEnd {
         searchBar.assertTextContains("test3")
         // 検索結果が消えていないこと
         searchResult.onChildren().assertCountEquals(2)
+    }
+
+    @Test
+    fun `scroll_down_in_result_area_should_hide_bottom_bar`() {
+        // Arrange
+        // Mock に本番と同じデータ (30 件) 用意する
+        val repositories = (0..30).map { Repository("${it}_repository", "", "", "", 0, 0, 0, 0) }
+        MockGitHubRepositoryImpl.repositories = repositories
+
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        searchBar.assertExists()
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        searchResult.assertExists()
+        // 検索結果一覧を用意
+        searchBar.performTextInput("test3")
+        searchBar.performImeAction()
+        val bottomBar = composeRule.onNodeWithTag(TestTags.BOTTOM_BAR)
+        bottomBar.assertExists()
+
+        // Act
+        composeRule.onRoot().performTouchInput {
+            swipeUp(
+                startY = centerY
+            )
+            android.os.SystemClock.sleep(1000)
+        }
+
+        // Assert
+        // 検索バー・検索結果が表示されていること
+        searchBar.assertExists()
+        searchResult.assertExists()
+        // BottomBar が消えていること！
+        bottomBar.assertDoesNotExist()
     }
 }

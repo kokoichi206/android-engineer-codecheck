@@ -14,11 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
 fun BottomBarView(
@@ -34,7 +36,8 @@ fun BottomBarView(
             .shadow(16.dp, RoundedCornerShape(32.dp))
             .clip(RoundedCornerShape(32.dp))
             .background(Color.Transparent)
-            .height(60.dp),
+            .height(60.dp)
+            .testTag(TestTags.BOTTOM_BAR),
         backgroundColor = Color.White,
         elevation = 5.dp,
     ) {
@@ -44,6 +47,8 @@ fun BottomBarView(
         bottomNavItems.forEach { item ->
             val selected = item.route == currentRoute
             BottomNavigationItem(
+                modifier = Modifier
+                    .testTag("${TestTags.BOTTOM_ITEM_PREFIX}_${item.name}"),
                 selected = selected,
                 onClick = {
                     // stock には 1 route のみ

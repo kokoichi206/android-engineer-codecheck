@@ -47,4 +47,71 @@ class JSONExtentionKtTest {
         assertEquals(3, repository.forksCount)
         assertEquals(4, repository.openIssuesCount)
     }
+
+    @Test
+    fun `toUser_convert_correctly`() {
+        // Arrange
+        val str = "{\n" +
+                "      \"login\": \"kokoichi206\",\n" +
+                "      \"id\": 52474650,\n" +
+                "      \"node_id\": \"MDQ6VXNlcjUyNDc0NjUw\",\n" +
+                "      \"avatar_url\": \"https://avatars.githubusercontent.com/u/52474650?v=4\",\n" +
+                "      \"gravatar_id\": \"\",\n" +
+                "      \"url\": \"https://api.github.com/users/kokoichi206\",\n" +
+                "      \"html_url\": \"https://github.com/kokoichi206\",\n" +
+                "      \"followers_url\": \"https://api.github.com/users/kokoichi206/followers\",\n" +
+                "      \"following_url\": \"https://api.github.com/users/kokoichi206/following{/other_user}\",\n" +
+                "      \"gists_url\": \"https://api.github.com/users/kokoichi206/gists{/gist_id}\",\n" +
+                "      \"starred_url\": \"https://api.github.com/users/kokoichi206/starred{/owner}{/repo}\",\n" +
+                "      \"subscriptions_url\": \"https://api.github.com/users/kokoichi206/subscriptions\",\n" +
+                "      \"organizations_url\": \"https://api.github.com/users/kokoichi206/orgs\",\n" +
+                "      \"repos_url\": \"https://api.github.com/users/kokoichi206/repos\",\n" +
+                "      \"events_url\": \"https://api.github.com/users/kokoichi206/events{/privacy}\",\n" +
+                "      \"received_events_url\": \"https://api.github.com/users/kokoichi206/received_events\",\n" +
+                "      \"type\": \"User\",\n" +
+                "      \"site_admin\": false,\n" +
+                "      \"score\": 1.0\n" +
+                "    }"
+        val jsonObject = JSONObject(str)
+
+        // Act
+        val user = jsonObject.toUser()
+
+        // Assert
+        assertEquals("kokoichi206", user.name)
+        assertEquals("https://avatars.githubusercontent.com/u/52474650?v=4", user.avatarUrl)
+        assertEquals("https://github.com/kokoichi206", user.htmlUrl)
+        assertEquals("User", user.type)
+    }
+
+    @Test
+    fun `toUser_with_no_field_in_json_should_not_crash`() {
+        // Arrange
+        val str = "{\n" +
+                "      \"id\": 52474650,\n" +
+                "      \"node_id\": \"MDQ6VXNlcjUyNDc0NjUw\",\n" +
+                "      \"gravatar_id\": \"\",\n" +
+                "      \"followers_url\": \"https://api.github.com/users/kokoichi206/followers\",\n" +
+                "      \"following_url\": \"https://api.github.com/users/kokoichi206/following{/other_user}\",\n" +
+                "      \"gists_url\": \"https://api.github.com/users/kokoichi206/gists{/gist_id}\",\n" +
+                "      \"starred_url\": \"https://api.github.com/users/kokoichi206/starred{/owner}{/repo}\",\n" +
+                "      \"subscriptions_url\": \"https://api.github.com/users/kokoichi206/subscriptions\",\n" +
+                "      \"organizations_url\": \"https://api.github.com/users/kokoichi206/orgs\",\n" +
+                "      \"events_url\": \"https://api.github.com/users/kokoichi206/events{/privacy}\",\n" +
+                "      \"received_events_url\": \"https://api.github.com/users/kokoichi206/received_events\",\n" +
+                "      \"site_admin\": false,\n" +
+                "      \"score\": 1.0\n" +
+                "    }"
+        val jsonObject = JSONObject(str)
+
+        // Act
+        val user = jsonObject.toUser()
+
+        // Assert
+        // 存在しないときは空文字が返ってくる
+        assertEquals("", user.name)
+        assertEquals("", user.avatarUrl)
+        assertEquals("", user.htmlUrl)
+        assertEquals("", user.type)
+    }
 }

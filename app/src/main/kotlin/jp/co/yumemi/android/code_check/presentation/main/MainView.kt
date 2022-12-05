@@ -59,6 +59,7 @@ fun MainView(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .testTag(TestTags.MAIN_VIEW)
     ) {
         Column(
             modifier = Modifier

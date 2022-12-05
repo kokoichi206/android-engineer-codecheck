@@ -73,6 +73,7 @@ fun UserViewMain(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .testTag(TestTags.USER_VIEW)
     ) {
         Column(
             modifier = Modifier
