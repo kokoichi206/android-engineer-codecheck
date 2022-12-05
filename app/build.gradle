@@ -95,4 +95,9 @@ dependencies {
 
     // System UI
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+
+    // Database
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    kapt "androidx.room:room-compiler:2.4.3"
 }
