@@ -1,4 +1,4 @@
-package jp.co.yumemi.android.code_check.presentation.main.component
+package jp.co.yumemi.android.code_check.presentation.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,18 +17,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import jp.co.yumemi.android.code_check.R
-import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     text: TextFieldValue,
+    hint: String,
     onValueChange: (TextFieldValue) -> Unit = {},
     onSearch: (String) -> Unit = {},
 ) {
@@ -49,7 +47,7 @@ fun SearchBar(
             Text(
                 modifier = Modifier
                     .padding(0.dp),
-                text = stringResource(R.string.searchInputText_hint),
+                text = hint,
                 maxLines = 1,
             )
         },
@@ -103,11 +101,11 @@ fun SearchBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    SearchBar(text = TextFieldValue())
+    SearchBar(text = TextFieldValue(), hint = "Hint")
 }
 
 @Preview
 @Composable
 fun SearchBarWithTextPreview() {
-    SearchBar(text = TextFieldValue("Kotlin"))
+    SearchBar(text = TextFieldValue("Kotlin"), hint = "Hint but not shown")
 }

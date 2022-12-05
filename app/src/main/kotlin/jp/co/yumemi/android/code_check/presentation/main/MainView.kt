@@ -9,15 +9,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.RecentSearched
-import jp.co.yumemi.android.code_check.presentation.main.component.SearchBar
+import jp.co.yumemi.android.code_check.presentation.util.SearchBar
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
@@ -61,6 +63,7 @@ fun MainView(
         ) {
             SearchBar(
                 text = uiState.searchInput,
+                hint = stringResource(R.string.searchInputText_hint),
                 onValueChange = {
                     viewModel.setSearchInput(it)
                     viewModel.setShowRecent(true)

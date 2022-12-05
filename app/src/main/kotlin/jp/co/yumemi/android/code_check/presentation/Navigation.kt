@@ -108,7 +108,11 @@ fun BottomNavigation(
 
         detailView()
 
-        userView()
+        userView(
+            onScroll = {
+                onScroll(it)
+            },
+        )
     }
 }
 
