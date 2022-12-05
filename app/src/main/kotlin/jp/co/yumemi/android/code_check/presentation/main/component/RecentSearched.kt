@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import jp.co.yumemi.android.code_check.presentation.theme.Colors
+import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
 fun RecentSearched(
@@ -42,6 +44,8 @@ fun RecentSearched(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    modifier = Modifier
+                        .testTag(TestTags.RECENT_SEARCHED),
                     text = "Recent",
                     fontSize = 16.sp,
                     style = TextStyle(
@@ -58,8 +62,9 @@ fun RecentSearched(
                         .background(iconColor)
                         .clickable {
                             onCloseClick()
-                        },
-                    contentDescription = "close recent",
+                        }
+                    .testTag(TestTags.RECENT_SEARCHED_CLOSE),
+                contentDescription = "close recent",
                     tint = Color.White,
                 )
             }
@@ -71,6 +76,8 @@ fun RecentSearched(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    modifier = Modifier
+                        .testTag("${TestTags.SEARCH_RECENT_RESULT_PREFIX}_$str"),
                     text = str,
                     fontSize = 16.sp,
                     style = TextStyle(
@@ -86,7 +93,8 @@ fun RecentSearched(
                         .rotate(45f)
                         .clickable {
                             onItemClick(str)
-                        },
+                        }
+                        .testTag("${TestTags.REFLECT_SEARCH_BAR_PREFIX}_$str"),
                     contentDescription = "close recent",
                     tint = iconColor,
                 )

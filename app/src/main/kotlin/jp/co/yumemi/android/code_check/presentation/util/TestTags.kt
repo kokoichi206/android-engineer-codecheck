@@ -5,6 +5,11 @@ object TestTags {
     const val SEARCH_BAR = "SEARCH_BAR"
     const val SEARCH_RESULT = "SEARCH_RESULT"
     const val CANCEL_BUTTON = "CANCEL_BUTTON"
+    // RecentSearched
+    const val RECENT_SEARCHED = "RECENT_SEARCHED"
+    const val RECENT_SEARCHED_CLOSE = "RECENT_SEARCHED_CLOSE"
+    const val SEARCH_RECENT_RESULT_PREFIX = "SEARCH_RECENT_RESULT_PREFIX"
+    const val REFLECT_SEARCH_BAR_PREFIX = "REFLECT_SEARCH_BAR_PREFIX"
 
     // In DetailView
     const val DETAIL_VIEW = "DETAIL_VIEW"
