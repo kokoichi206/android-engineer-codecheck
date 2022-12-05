@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import jp.co.yumemi.android.code_check.R
@@ -27,8 +28,8 @@ import jp.co.yumemi.android.code_check.presentation.util.TestTags
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    text: String,
-    onValueChange: (String) -> Unit = {},
+    text: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit = {},
     onSearch: (String) -> Unit = {},
 ) {
 
@@ -41,7 +42,9 @@ fun SearchBar(
             .background(Color.White)
             .testTag(TestTags.SEARCH_BAR),
         value = text,
-        onValueChange = { onValueChange(it) },
+        onValueChange = {
+            onValueChange(it)
+        },
         placeholder = {
             Text(
                 modifier = Modifier
@@ -61,7 +64,7 @@ fun SearchBar(
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                onSearch(text)
+                onSearch(text.text)
             }
         ),
         leadingIcon = {
@@ -74,10 +77,12 @@ fun SearchBar(
             )
         },
         trailingIcon = {
-            if (text.isNotEmpty()) {
+            if (text.text.isNotEmpty()) {
                 IconButton(
+                    modifier = Modifier
+                        .testTag(TestTags.CANCEL_BUTTON),
                     onClick = {
-                        onValueChange("")
+                        onValueChange(TextFieldValue())
                     }
                 ) {
                     Icon(
@@ -98,11 +103,11 @@ fun SearchBar(
 @Preview
 @Composable
 fun SearchBarPreview() {
-    SearchBar(text = "")
+    SearchBar(text = TextFieldValue())
 }
 
 @Preview
 @Composable
 fun SearchBarWithTextPreview() {
-    SearchBar(text = "Kotlin")
+    SearchBar(text = TextFieldValue("Kotlin"))
 }

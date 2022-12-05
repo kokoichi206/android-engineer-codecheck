@@ -11,6 +11,7 @@ import org.json.JSONObject
  */
 fun JSONObject.toRepository(): Repository {
     val name = optString("full_name")
+    val repoUrl = optString("html_url")
     val ownerIconUrl = optJSONObject("owner")?.optString("avatar_url") ?: "empty_url"
     val language = optString("language")
     val stargazersCount = optLong("stargazers_count")
@@ -20,6 +21,7 @@ fun JSONObject.toRepository(): Repository {
 
     return Repository(
         name = name,
+        repoUrl = repoUrl,
         ownerIconUrl = ownerIconUrl,
         language = language,
         stargazersCount = stargazersCount,

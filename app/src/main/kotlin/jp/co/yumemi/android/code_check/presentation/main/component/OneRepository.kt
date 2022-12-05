@@ -84,6 +84,7 @@ fun OneRepository(
 fun OneRepositoryPreview() {
     val repository = Repository(
         name = "kokoichi206/kokoichi206",
+        repoUrl = "",
         ownerIconUrl = "",
         language = "Kotlin",
         stargazersCount = 0,

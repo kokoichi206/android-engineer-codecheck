@@ -1,6 +1,6 @@
 package jp.co.yumemi.android.code_check.data.repository
 
-import jp.co.yumemi.android.code_check.data.GitHubAPI
+import jp.co.yumemi.android.code_check.data.remote.GitHubAPI
 import jp.co.yumemi.android.code_check.models.Repository
 
 /**
