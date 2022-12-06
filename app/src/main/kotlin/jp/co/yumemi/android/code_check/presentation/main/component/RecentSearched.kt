@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,7 +37,6 @@ fun RecentSearched(
     onItemClick: (String) -> Unit = {},
     onItemReflectClick: (String) -> Unit = {},
 ) {
-    val iconColor = Color.Gray.copy(alpha = 0.4f)
 
     LazyColumn(
         modifier = Modifier
@@ -63,7 +63,7 @@ fun RecentSearched(
                     modifier = Modifier
                         .size(16.dp)
                         .clip(CircleShape)
-                        .background(iconColor)
+                        .background(Color.Gray.copy(alpha = 0.4f))
                         .clickable {
                             onCloseClick()
                         }
@@ -90,7 +90,7 @@ fun RecentSearched(
                     text = str,
                     fontSize = 16.sp,
                     style = TextStyle(
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold,
                     ),
                 )
@@ -98,7 +98,7 @@ fun RecentSearched(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(20.dp)
                         .rotate(45f)
                         .clickable(
                             onClick = {
@@ -109,7 +109,7 @@ fun RecentSearched(
                         )
                         .testTag("${TestTags.REFLECT_SEARCH_BAR_PREFIX}_$str"),
                     contentDescription = "close recent",
-                    tint = iconColor,
+                    tint = MaterialTheme.colorScheme.onBackground,
                 )
             }
         }
