@@ -77,4 +77,8 @@ class MainViewModel @Inject constructor(
     fun setShowRecent(showRecent: Boolean) {
         _uiState.update { it.copy(showRecent = showRecent) }
     }
+
+    fun resetError() {
+        _uiState.update { it.copy(error = "") }
+    }
 }
