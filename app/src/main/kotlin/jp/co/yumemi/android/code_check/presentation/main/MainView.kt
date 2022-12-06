@@ -20,6 +20,7 @@ import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.RecentSearched
+import jp.co.yumemi.android.code_check.presentation.util.CustomCircularProgressIndicator
 import jp.co.yumemi.android.code_check.presentation.util.SearchBar
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
@@ -44,7 +45,7 @@ fun MainView(
         }.collect {
             if (it.visibleItemsInfo.isNotEmpty()) {
                 val info = it.visibleItemsInfo[0]
-                if (lastIndex != info.index ) {
+                if (lastIndex != info.index) {
                     // Scroll された Index 分、呼び出し元に返してあげる
                     val diff = lastIndex - info.index
                     onScroll(diff)
@@ -61,6 +62,8 @@ fun MainView(
             .fillMaxSize()
             .testTag(TestTags.MAIN_VIEW)
     ) {
+        CustomCircularProgressIndicator(visible = uiState.isLoading)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

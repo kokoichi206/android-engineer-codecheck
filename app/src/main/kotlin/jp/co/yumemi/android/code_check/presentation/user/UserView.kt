@@ -19,6 +19,7 @@ import jp.co.yumemi.android.code_check.models.User
 import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.util.SearchBar
 import jp.co.yumemi.android.code_check.presentation.user.component.OneUser
+import jp.co.yumemi.android.code_check.presentation.util.CustomCircularProgressIndicator
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 
 @Composable
@@ -75,6 +76,8 @@ fun UserViewMain(
             .fillMaxSize()
             .testTag(TestTags.USER_VIEW)
     ) {
+        CustomCircularProgressIndicator(visible = uiState.isLoading)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
