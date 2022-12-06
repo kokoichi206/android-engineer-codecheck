@@ -6,7 +6,9 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.models.Repository
+import jp.co.yumemi.android.code_check.models.User
 import jp.co.yumemi.android.code_check.util.toRepository
+import jp.co.yumemi.android.code_check.util.toUser
 import org.json.JSONObject
 
 /**
@@ -35,6 +37,27 @@ class GitHubAPI(
                 val jsonItem = it.optJSONObject(i)
 
                 result.add(jsonItem.toRepository())
+            }
+        }
+
+        return result
+    }
+
+    suspend fun searchUsers(query: String): List<User> {
+        val response: HttpResponse = client.get("$BASE_URL/search/users") {
+            header("Accept", "application/vnd.github.v3+json")
+            parameter("q", query)
+        }
+
+        val jsonBody = JSONObject(response.receive<String>())
+        val jsonItems = jsonBody.optJSONArray("items")
+
+        val result = mutableListOf<User>()
+        jsonItems?.let {
+            for (i in 0 until it.length()) {
+                val jsonItem = it.optJSONObject(i)
+
+                result.add(jsonItem.toUser())
             }
         }
 

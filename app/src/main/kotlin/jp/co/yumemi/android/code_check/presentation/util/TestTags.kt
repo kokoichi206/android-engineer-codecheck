@@ -1,10 +1,16 @@
 package jp.co.yumemi.android.code_check.presentation.util
 
 object TestTags {
+    // BottomBar
+    const val BOTTOM_BAR = "BOTTOM_BAR"
+    const val BOTTOM_ITEM_PREFIX = "BOTTOM_ITEM_PREFIX"
+
     // In MainView
+    const val MAIN_VIEW = "MAIN_VIEW"
     const val SEARCH_BAR = "SEARCH_BAR"
     const val SEARCH_RESULT = "SEARCH_RESULT"
     const val CANCEL_BUTTON = "CANCEL_BUTTON"
+
     // RecentSearched
     const val RECENT_SEARCHED = "RECENT_SEARCHED"
     const val RECENT_SEARCHED_CLOSE = "RECENT_SEARCHED_CLOSE"
@@ -13,6 +19,7 @@ object TestTags {
     const val REFLECT_SEARCH_BAR_PREFIX = "REFLECT_SEARCH_BAR_PREFIX"
 
     // In DetailView
+    const val USER_VIEW = "USER_VIEW"
     const val DETAIL_VIEW = "DETAIL_VIEW"
     const val DETAIL_NAME = "DETAIL_NAME"
     const val DETAIL_LANGUAGE = "DETAIL_LANGUAGE"
