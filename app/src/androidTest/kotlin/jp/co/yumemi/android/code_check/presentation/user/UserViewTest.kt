@@ -74,7 +74,8 @@ class UserViewTest {
         // Assert
         searchBar.assertTextEquals("kokoichi206")
 
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("kokoichi206", MockGitHubRepositoryImpl.passedQuery)
     }
 
@@ -95,7 +96,7 @@ class UserViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されてないこと
-        assertEquals(0, MockGitHubRepositoryImpl.counter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
         assertNull(MockGitHubRepositoryImpl.passedQuery)
     }
 
@@ -115,7 +116,7 @@ class UserViewTest {
         // Assert
         searchResult.onChildren().assertCountEquals(0)
         // API が呼び出されていること
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
         // Snack Bar が表示されていること
         snackBar.assertExists().assertTextContains("結果が1件も見つかりませんでした。\n検索ワードを変えて再度お試しください。")
@@ -143,7 +144,7 @@ class UserViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されていること
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("test2", MockGitHubRepositoryImpl.passedQuery)
         // スナックバーが表示されていること
         snackBar.assertExists()

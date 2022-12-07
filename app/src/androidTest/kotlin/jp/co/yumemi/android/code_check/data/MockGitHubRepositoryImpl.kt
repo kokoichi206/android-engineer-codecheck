@@ -8,7 +8,8 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
     companion object {
         // FIXME: 順番によっては失敗しうる気がする。
-        var counter = 0
+        var searchRepositoriesCounter = 0
+        var searchUsersCounter = 0
         var passedQuery: String? = null
         var error: Exception? = null
         var repositories = listOf(
@@ -49,7 +50,8 @@ class MockGitHubRepositoryImpl : GitHubRepository {
         )
 
         fun initMock() {
-            counter = 0
+            searchRepositoriesCounter = 0
+            searchUsersCounter = 0
             passedQuery = null
             error = null
             repositories = listOf(
@@ -93,7 +95,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
     override suspend fun searchRepositories(query: String): List<Repository> {
 
-        counter += 1
+        searchRepositoriesCounter += 1
         passedQuery = query
 
         error?.let { throw it }
@@ -103,7 +105,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
     override suspend fun searchUsers(query: String): List<User> {
 
-        counter += 1
+        searchUsersCounter += 1
         passedQuery = query
 
         error?.let { throw it }
