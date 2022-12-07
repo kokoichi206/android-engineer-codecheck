@@ -11,4 +11,6 @@
 
     <!--UserView-->
     <string name="searchInputText_hint_users">GitHub のユーザーを検索できるよー</string>
+
+    <string name="apiErrorMessage">"通信エラーが発生しました。\n時間をおいて再度お試しください。"</string>
 </resources>

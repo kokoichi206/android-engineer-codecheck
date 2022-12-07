@@ -62,4 +62,8 @@ class UserViewModel @Inject constructor(
         }
         _uiState.update { it.copy(searchInput = inputText) }
     }
+
+    fun resetError() {
+        _uiState.update { it.copy(error = "") }
+    }
 }

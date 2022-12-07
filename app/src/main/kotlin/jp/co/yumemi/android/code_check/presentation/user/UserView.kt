@@ -3,10 +3,13 @@ package jp.co.yumemi.android.code_check.presentation.user
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -19,7 +22,11 @@ import jp.co.yumemi.android.code_check.models.User
 import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.util.SearchBar
 import jp.co.yumemi.android.code_check.presentation.user.component.OneUser
+import jp.co.yumemi.android.code_check.presentation.util.CustomCircularProgressIndicator
+import jp.co.yumemi.android.code_check.presentation.util.SnackbarSetting
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserView(
@@ -38,6 +45,9 @@ fun UserView(
             viewModel.searchResults(it)
             MainActivity.updateLastSearchDate()
         },
+        onSnackBarShow = {
+            viewModel.resetError()
+        },
     )
 }
 
@@ -47,6 +57,7 @@ fun UserViewMain(
     onScroll: (Int) -> Unit = {},
     onValueChange: (TextFieldValue) -> Unit = {},
     onSearch: (String) -> Unit = {},
+    onSnackBarShow: () -> Unit = {},
 ) {
 
     val scrollState = rememberLazyListState()
@@ -75,6 +86,8 @@ fun UserViewMain(
             .fillMaxSize()
             .testTag(TestTags.USER_VIEW)
     ) {
+        CustomCircularProgressIndicator(visible = uiState.isLoading)
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,6 +120,33 @@ fun UserViewMain(
                 }
             }
         }
+    }
+
+    // snackBar の状態管理用
+    val snackBarCoroutineScope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    var snackBarJob: Job? by remember { mutableStateOf(null) }
+
+    val snackBarMessage = stringResource(id = R.string.apiErrorMessage)
+    LaunchedEffect(uiState.error) {
+        if (uiState.error.isNotEmpty()) {
+            snackBarJob?.cancel()
+            snackBarJob = snackBarCoroutineScope.launch {
+                snackBarHostState.showSnackbar(snackBarMessage)
+            }
+            onSnackBarShow()
+        }
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        SnackbarSetting(
+            snackbarHostState = snackBarHostState,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
     }
 }
 

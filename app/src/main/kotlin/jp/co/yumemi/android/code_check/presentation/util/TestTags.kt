@@ -27,4 +27,7 @@ object TestTags {
     const val DETAIL_WATCHERS = "DETAIL_WATCHERS"
     const val DETAIL_FORKS = "DETAIL_FORKS"
     const val DETAIL_ISSUES = "DETAIL_ISSUES"
+
+    // SnackBar
+    const val SNACK_BAR = "SNACK_BAR"
 }

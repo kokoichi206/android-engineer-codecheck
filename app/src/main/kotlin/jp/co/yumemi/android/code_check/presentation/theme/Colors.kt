@@ -20,7 +20,9 @@ val myLightColorScheme = lightColorScheme(
     onPrimary = Color.White,
     background = Color.White,
     onBackground = Color.Black,
-    secondary = SecondaryGreen,
+    secondary = Color.White,
+    onSecondary = SecondaryGreen,
+    outline = Color.Gray,
 )
 
 @SuppressLint("ConflictingOnColor")
@@ -29,5 +31,7 @@ val myDarkColorScheme = darkColorScheme(
     onPrimary = PrimaryBlue,
     background = Color(0xFF1A1C19),
     onBackground = Color(0xFFDAE1FD),
-    secondary = SecondaryGreen,
+    secondary = Color(0xFF454845),
+    onSecondary = SecondaryGreen,
+    outline = Color.Gray,
 )
