@@ -33,6 +33,20 @@ class MockGitHubRepositoryImpl : GitHubRepository {
                 openIssuesCount = 3,
             ),
         )
+        var users = listOf(
+            User(
+                name = "kokoichi206",
+                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                htmlUrl = "https://github.com/kokoichi206",
+                type = "User",
+            ),
+            User(
+                name = "kokoichi2",
+                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                htmlUrl = "https://github.com/kokoichi2",
+                type = "User",
+            ),
+        )
 
         fun initMock() {
             counter = 0
@@ -60,6 +74,20 @@ class MockGitHubRepositoryImpl : GitHubRepository {
                     openIssuesCount = 3,
                 ),
             )
+            users = listOf(
+                User(
+                    name = "kokoichi206",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                    htmlUrl = "https://github.com/kokoichi206",
+                    type = "User",
+                ),
+                User(
+                    name = "kokoichi2",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                    htmlUrl = "https://github.com/kokoichi2",
+                    type = "User",
+                ),
+            )
         }
     }
 
@@ -80,19 +108,6 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
         error?.let { throw it }
 
-        return listOf(
-            User(
-                name = "kokoichi206",
-                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
-                htmlUrl = "https://github.com/kokoichi206",
-                type = "User",
-            ),
-            User(
-                name = "kokoichi2",
-                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
-                htmlUrl = "https://github.com/kokoichi2",
-                type = "User",
-            ),
-        )
+        return users
     }
 }

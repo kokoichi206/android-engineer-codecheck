@@ -128,6 +128,28 @@ class MainViewTest {
     }
 
     @Test
+    fun `search_repositories_with_no_result_should_show_snackBar`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        val snackBar = composeRule.onNodeWithTag(TestTags.SNACK_BAR)
+        snackBar.assertDoesNotExist()
+        MockGitHubRepositoryImpl.repositories = emptyList()
+        searchBar.performTextInput("test")
+
+        // Act
+        searchBar.performImeAction()
+
+        // Assert
+        searchResult.onChildren().assertCountEquals(0)
+        // API が呼び出されていること
+        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        // Snack Bar が表示されていること
+        snackBar.assertExists().assertTextContains("結果が1件も見つかりませんでした。\n検索ワードを変えて再度お試しください。")
+    }
+
+    @Test
     fun `search_repositories_when_exception`() {
         // Arrange
         val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
