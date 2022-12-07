@@ -11,11 +11,11 @@ class GitHubRepositoryImpl(
     private val api: GitHubAPI,
 ) : GitHubRepository {
 
-    override suspend fun searchRepositories(query: String): List<Repository> {
-        return api.searchRepositories(query)
+    override suspend fun searchRepositories(query: String, page: Int): List<Repository> {
+        return api.searchRepositories(query, page)
     }
 
-    override suspend fun searchUsers(query: String): List<User> {
-        return api.searchUsers(query)
+    override suspend fun searchUsers(query: String, page: Int): List<User> {
+        return api.searchUsers(query, page)
     }
 }
