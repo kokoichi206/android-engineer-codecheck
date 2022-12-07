@@ -100,7 +100,7 @@ class UserViewTest {
     }
 
     @Test
-    fun `search_users_when_exception_occurs_should_not_crash`() {
+    fun `search_users_when_exception_occurs`() {
         // Arrange
         val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
         searchBar.assertExists()
@@ -108,6 +108,8 @@ class UserViewTest {
         searchResult.assertExists()
         // API (正確には Repository) で擬似的にエラーを吐かせる
         MockGitHubRepositoryImpl.error = Exception("My Custom Exception")
+        val snackBar = composeRule.onNodeWithTag(TestTags.SNACK_BAR)
+        snackBar.assertDoesNotExist()
 
         // Act
         searchBar.performTextInput("test2")
@@ -121,6 +123,8 @@ class UserViewTest {
         // API が呼び出されていること
         assertEquals(1, MockGitHubRepositoryImpl.counter)
         assertEquals("test2", MockGitHubRepositoryImpl.passedQuery)
+        // スナックバーが表示されていること
+        snackBar.assertExists()
     }
 
     @Test

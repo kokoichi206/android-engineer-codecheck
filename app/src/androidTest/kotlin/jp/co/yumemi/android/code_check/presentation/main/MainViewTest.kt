@@ -128,7 +128,7 @@ class MainViewTest {
     }
 
     @Test
-    fun `search_repositories_when_exception_occurs_should_not_crash`() {
+    fun `search_repositories_when_exception`() {
         // Arrange
         val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
         searchBar.assertExists()
@@ -138,6 +138,8 @@ class MainViewTest {
         MockGitHubRepositoryImpl.error = Exception("My Custom Exception")
         val recent = composeRule.onNodeWithTag(TestTags.RECENT_SEARCHED)
         recent.assertExists()
+        val snackBar = composeRule.onNodeWithTag(TestTags.SNACK_BAR)
+        snackBar.assertDoesNotExist()
 
         // Act
         searchBar.performTextInput("test2")
@@ -153,6 +155,8 @@ class MainViewTest {
         assertEquals("test2", MockGitHubRepositoryImpl.passedQuery)
         // 直近の検索結果が消えていないこと
         recent.assertExists()
+        // スナックバーが表示されていること
+        snackBar.assertExists()
     }
 
     @Test

@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -37,7 +38,8 @@ fun SnackbarSetting(
                     Text(
                         modifier = Modifier
                             .background(androidx.compose.material3.MaterialTheme.colorScheme.secondary)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .testTag(TestTags.SNACK_BAR),
                         text = snackbarData.message,
                         color = androidx.compose.material3.MaterialTheme.colorScheme.onSecondary,
                     )
