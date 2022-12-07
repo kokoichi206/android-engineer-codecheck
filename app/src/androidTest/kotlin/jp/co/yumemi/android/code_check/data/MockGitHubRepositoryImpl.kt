@@ -8,7 +8,8 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
     companion object {
         // FIXME: 順番によっては失敗しうる気がする。
-        var counter = 0
+        var searchRepositoriesCounter = 0
+        var searchUsersCounter = 0
         var passedQuery: String? = null
         var error: Exception? = null
         var repositories = listOf(
@@ -33,9 +34,24 @@ class MockGitHubRepositoryImpl : GitHubRepository {
                 openIssuesCount = 3,
             ),
         )
+        var users = listOf(
+            User(
+                name = "kokoichi206",
+                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                htmlUrl = "https://github.com/kokoichi206",
+                type = "User",
+            ),
+            User(
+                name = "kokoichi2",
+                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                htmlUrl = "https://github.com/kokoichi2",
+                type = "User",
+            ),
+        )
 
         fun initMock() {
-            counter = 0
+            searchRepositoriesCounter = 0
+            searchUsersCounter = 0
             passedQuery = null
             error = null
             repositories = listOf(
@@ -60,12 +76,26 @@ class MockGitHubRepositoryImpl : GitHubRepository {
                     openIssuesCount = 3,
                 ),
             )
+            users = listOf(
+                User(
+                    name = "kokoichi206",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                    htmlUrl = "https://github.com/kokoichi206",
+                    type = "User",
+                ),
+                User(
+                    name = "kokoichi2",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
+                    htmlUrl = "https://github.com/kokoichi2",
+                    type = "User",
+                ),
+            )
         }
     }
 
     override suspend fun searchRepositories(query: String): List<Repository> {
 
-        counter += 1
+        searchRepositoriesCounter += 1
         passedQuery = query
 
         error?.let { throw it }
@@ -75,24 +105,11 @@ class MockGitHubRepositoryImpl : GitHubRepository {
 
     override suspend fun searchUsers(query: String): List<User> {
 
-        counter += 1
+        searchUsersCounter += 1
         passedQuery = query
 
         error?.let { throw it }
 
-        return listOf(
-            User(
-                name = "kokoichi206",
-                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
-                htmlUrl = "https://github.com/kokoichi206",
-                type = "User",
-            ),
-            User(
-                name = "kokoichi2",
-                avatarUrl = "https://avatars.githubusercontent.com/u/112583732?v=4",
-                htmlUrl = "https://github.com/kokoichi2",
-                type = "User",
-            ),
-        )
+        return users
     }
 }

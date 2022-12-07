@@ -143,12 +143,12 @@ fun MainView(
         val snackBarHostState = remember { SnackbarHostState() }
         var snackBarJob: Job? by remember { mutableStateOf(null) }
 
-        val snackBarMessage = stringResource(id = R.string.apiErrorMessage)
         LaunchedEffect(uiState.error) {
             if (uiState.error.isNotEmpty()) {
                 snackBarJob?.cancel()
                 snackBarJob = snackBarCoroutineScope.launch {
-                    snackBarHostState.showSnackbar(snackBarMessage)
+                    // uiState のエラーをそのまま表示する
+                    snackBarHostState.showSnackbar(uiState.error)
                 }
                 viewModel.resetError()
             }

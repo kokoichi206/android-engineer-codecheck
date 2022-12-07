@@ -74,7 +74,8 @@ class UserViewTest {
         // Assert
         searchBar.assertTextEquals("kokoichi206")
 
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("kokoichi206", MockGitHubRepositoryImpl.passedQuery)
     }
 
@@ -95,8 +96,30 @@ class UserViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されてないこと
-        assertEquals(0, MockGitHubRepositoryImpl.counter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
         assertNull(MockGitHubRepositoryImpl.passedQuery)
+    }
+
+    @Test
+    fun `search_users_with_no_result_should_show_snackBar`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        val snackBar = composeRule.onNodeWithTag(TestTags.SNACK_BAR)
+        snackBar.assertDoesNotExist()
+        MockGitHubRepositoryImpl.users = emptyList()
+        searchBar.performTextInput("test")
+
+        // Act
+        searchBar.performImeAction()
+
+        // Assert
+        searchResult.onChildren().assertCountEquals(0)
+        // API が呼び出されていること
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
+        assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        // Snack Bar が表示されていること
+        snackBar.assertExists().assertTextContains("結果が1件も見つかりませんでした。\n検索ワードを変えて再度お試しください。")
     }
 
     @Test
@@ -121,7 +144,7 @@ class UserViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されていること
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("test2", MockGitHubRepositoryImpl.passedQuery)
         // スナックバーが表示されていること
         snackBar.assertExists()

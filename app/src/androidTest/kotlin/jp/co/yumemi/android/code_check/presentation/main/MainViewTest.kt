@@ -96,7 +96,8 @@ class MainViewTest {
         // Mock で用意した数表示されていること
         searchResult.onChildren().assertCountEquals(2)
 
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
         // 直近の検索結果が消えていること
         recent.assertDoesNotExist()
@@ -121,10 +122,32 @@ class MainViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されてないこと
-        assertEquals(0, MockGitHubRepositoryImpl.counter)
+        assertEquals(0, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertNull(MockGitHubRepositoryImpl.passedQuery)
         // 直近の検索結果が消えていないこと
         recent.assertExists()
+    }
+
+    @Test
+    fun `search_repositories_with_no_result_should_show_snackBar`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+        val snackBar = composeRule.onNodeWithTag(TestTags.SNACK_BAR)
+        snackBar.assertDoesNotExist()
+        MockGitHubRepositoryImpl.repositories = emptyList()
+        searchBar.performTextInput("test")
+
+        // Act
+        searchBar.performImeAction()
+
+        // Assert
+        searchResult.onChildren().assertCountEquals(0)
+        // API が呼び出されていること
+        assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        // Snack Bar が表示されていること
+        snackBar.assertExists().assertTextContains("結果が1件も見つかりませんでした。\n検索ワードを変えて再度お試しください。")
     }
 
     @Test
@@ -151,7 +174,7 @@ class MainViewTest {
         searchResult.onChildren().assertCountEquals(0)
 
         // API が呼び出されていること
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertEquals("test2", MockGitHubRepositoryImpl.passedQuery)
         // 直近の検索結果が消えていないこと
         recent.assertExists()
@@ -276,7 +299,7 @@ class MainViewTest {
         searchResult.onChildren().assertCountEquals(2)
 
         // API が呼び出されていること
-        assertEquals(1, MockGitHubRepositoryImpl.counter)
+        assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertEquals(query, MockGitHubRepositoryImpl.passedQuery)
     }
 
