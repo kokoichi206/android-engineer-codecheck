@@ -8,6 +8,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import jp.co.yumemi.android.code_check.data.MockGitHubRepositoryImpl
 import jp.co.yumemi.android.code_check.di.AppModule
+import jp.co.yumemi.android.code_check.models.User
 import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.util.TestTags
 import org.junit.After
@@ -65,6 +66,7 @@ class UserViewTest {
         searchBar.assertExists()
         val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
         searchResult.assertExists()
+        assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
 
         // Act
         searchBar.performTextInput("kokoichi206")
@@ -77,6 +79,34 @@ class UserViewTest {
         assertEquals(0, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("kokoichi206", MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(1, MockGitHubRepositoryImpl.passedPage)
+    }
+
+    @Test
+    fun `scroll_to_end_should_call_search_users`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+
+        val users = (0..30).map { User("${it}_repository", "", "", "") }
+        MockGitHubRepositoryImpl.users = users
+
+        searchBar.performTextInput("test")
+        searchBar.performImeAction()
+
+        assertEquals(1, MockGitHubRepositoryImpl.searchUsersCounter)
+        searchResult.performScrollToIndex(30)
+
+        // Act
+        searchResult.performTouchInput {
+            swipeUp(startY = centerY)
+        }
+
+        // Assert
+        // 2回 API が呼ばれていること
+        assertEquals(2, MockGitHubRepositoryImpl.searchUsersCounter)
+        assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(2, MockGitHubRepositoryImpl.passedPage)
     }
 
     @Test
@@ -98,6 +128,7 @@ class UserViewTest {
         // API が呼び出されてないこと
         assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
         assertNull(MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(0, MockGitHubRepositoryImpl.passedPage)
     }
 
     @Test

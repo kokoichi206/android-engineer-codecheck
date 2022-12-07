@@ -27,6 +27,7 @@ class GitHubAPITest {
             )
         }
         val query = "my_query"
+        val page = 1
 
         // Act
         var result: List<Repository>
@@ -34,14 +35,14 @@ class GitHubAPITest {
             val client = HttpClient(mockEngine)
             val api = GitHubAPI(client)
 
-            result = api.searchRepositories(query)
+            result = api.searchRepositories(query, page)
         }
 
         // Assert
         // リクエストの確認
         assertEquals(1, mockEngine.requestHistory.size)
         val request = mockEngine.requestHistory[0]
-        assertEquals("https://api.github.com/search/repositories?q=$query", request.url.toString())
+        assertEquals("https://api.github.com/search/repositories?q=$query&page=$page", request.url.toString())
         // accept に application/vnd.github.v3+json を設定することが、ドキュメントで推奨されている
         // https://docs.github.com/ja/rest/search?apiVersion=2022-11-28#search-repositories--parameters
         val headers = request.headers
@@ -67,6 +68,7 @@ class GitHubAPITest {
             )
         }
         val query = "my_query"
+        val page = 1
 
         // Act
         var result: List<Repository>
@@ -75,14 +77,14 @@ class GitHubAPITest {
             val api = GitHubAPI(client)
 
             // Test アノテーションで、例外が投げられているかを確認している
-            result = api.searchRepositories(query)
+            result = api.searchRepositories(query, page)
         }
 
         // Assert
         // リクエストの確認
         assertEquals(1, mockEngine.requestHistory.size)
         val request = mockEngine.requestHistory[0]
-        assertEquals("https://api.github.com/search/repositories?q=$query", request.url.toString())
+        assertEquals("https://api.github.com/search/repositories?q=$query&page=$page", request.url.toString())
         // accept に application/vnd.github.v3+json を設定することが、ドキュメントで推奨されている
         // https://docs.github.com/ja/rest/search?apiVersion=2022-11-28#search-repositories--parameters
         val headers = request.headers

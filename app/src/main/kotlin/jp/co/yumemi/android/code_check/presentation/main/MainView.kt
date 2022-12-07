@@ -23,10 +23,7 @@ import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.RecentSearched
-import jp.co.yumemi.android.code_check.presentation.util.CustomCircularProgressIndicator
-import jp.co.yumemi.android.code_check.presentation.util.SearchBar
-import jp.co.yumemi.android.code_check.presentation.util.SnackbarSetting
-import jp.co.yumemi.android.code_check.presentation.util.TestTags
+import jp.co.yumemi.android.code_check.presentation.util.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -57,6 +54,10 @@ fun MainView(
                     onScroll(diff)
                     lastIndex = info.index
                 }
+            }
+            // 最下部 かつ スクロールされた
+            if (scrollState.isScrolledToEnd() && lastIndex != 0) {
+                viewModel.onScrollEnd()
             }
         }
     }

@@ -22,10 +22,11 @@ class GitHubAPI(
         const val BASE_URL = "https://api.github.com"
     }
 
-    suspend fun searchRepositories(query: String): List<Repository> {
+    suspend fun searchRepositories(query: String, page: Int): List<Repository> {
         val response: HttpResponse = client.get("$BASE_URL/search/repositories") {
             header("Accept", "application/vnd.github.v3+json")
             parameter("q", query)
+            parameter("page", page)
         }
 
         val jsonBody = JSONObject(response.receive<String>())
@@ -43,10 +44,11 @@ class GitHubAPI(
         return result
     }
 
-    suspend fun searchUsers(query: String): List<User> {
+    suspend fun searchUsers(query: String, page: Int): List<User> {
         val response: HttpResponse = client.get("$BASE_URL/search/users") {
             header("Accept", "application/vnd.github.v3+json")
             parameter("q", query)
+            parameter("page", page)
         }
 
         val jsonBody = JSONObject(response.receive<String>())

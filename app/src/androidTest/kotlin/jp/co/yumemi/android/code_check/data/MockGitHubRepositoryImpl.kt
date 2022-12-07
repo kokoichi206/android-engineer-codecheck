@@ -11,6 +11,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
         var searchRepositoriesCounter = 0
         var searchUsersCounter = 0
         var passedQuery: String? = null
+        var passedPage = 0
         var error: Exception? = null
         var repositories = listOf(
             Repository(
@@ -53,6 +54,7 @@ class MockGitHubRepositoryImpl : GitHubRepository {
             searchRepositoriesCounter = 0
             searchUsersCounter = 0
             passedQuery = null
+            passedPage = 0
             error = null
             repositories = listOf(
                 Repository(
@@ -93,20 +95,22 @@ class MockGitHubRepositoryImpl : GitHubRepository {
         }
     }
 
-    override suspend fun searchRepositories(query: String): List<Repository> {
+    override suspend fun searchRepositories(query: String, page: Int): List<Repository> {
 
         searchRepositoriesCounter += 1
         passedQuery = query
+        passedPage = page
 
         error?.let { throw it }
 
         return repositories
     }
 
-    override suspend fun searchUsers(query: String): List<User> {
+    override suspend fun searchUsers(query: String, page: Int): List<User> {
 
         searchUsersCounter += 1
         passedQuery = query
+        passedPage = page
 
         error?.let { throw it }
 

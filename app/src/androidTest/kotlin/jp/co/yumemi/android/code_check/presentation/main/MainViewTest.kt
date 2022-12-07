@@ -99,8 +99,36 @@ class MainViewTest {
         assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertEquals(0, MockGitHubRepositoryImpl.searchUsersCounter)
         assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(1, MockGitHubRepositoryImpl.passedPage)
         // 直近の検索結果が消えていること
         recent.assertDoesNotExist()
+    }
+
+    @Test
+    fun `scroll_to_end_should_call_search_repositories`() {
+        // Arrange
+        val searchBar = composeRule.onNodeWithTag(TestTags.SEARCH_BAR)
+        val searchResult = composeRule.onNodeWithTag(TestTags.SEARCH_RESULT)
+
+        val repositories = (0..30).map { Repository("${it}_repository", "", "", "", 0, 0, 0, 0) }
+        MockGitHubRepositoryImpl.repositories = repositories
+
+        searchBar.performTextInput("test")
+        searchBar.performImeAction()
+
+        assertEquals(1, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        searchResult.performScrollToIndex(30)
+
+        // Act
+        composeRule.onRoot().performTouchInput {
+            swipeUp(startY = centerY)
+        }
+
+        // Assert
+        // 2回 API が呼ばれていること
+        assertEquals(2, MockGitHubRepositoryImpl.searchRepositoriesCounter)
+        assertEquals("test", MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(2, MockGitHubRepositoryImpl.passedPage)
     }
 
     @Test
@@ -124,6 +152,7 @@ class MainViewTest {
         // API が呼び出されてないこと
         assertEquals(0, MockGitHubRepositoryImpl.searchRepositoriesCounter)
         assertNull(MockGitHubRepositoryImpl.passedQuery)
+        assertEquals(0, MockGitHubRepositoryImpl.passedPage)
         // 直近の検索結果が消えていないこと
         recent.assertExists()
     }

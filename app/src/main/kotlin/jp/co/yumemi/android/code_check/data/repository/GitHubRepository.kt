@@ -8,7 +8,7 @@ import jp.co.yumemi.android.code_check.models.User
  */
 interface GitHubRepository {
 
-    suspend fun searchRepositories(query: String): List<Repository>
+    suspend fun searchRepositories(query: String, page: Int): List<Repository>
 
-    suspend fun searchUsers(query: String): List<User>
+    suspend fun searchUsers(query: String, page: Int): List<User>
 }

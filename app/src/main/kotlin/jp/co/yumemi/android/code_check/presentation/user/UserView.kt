@@ -20,11 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.User
 import jp.co.yumemi.android.code_check.presentation.MainActivity
-import jp.co.yumemi.android.code_check.presentation.util.SearchBar
 import jp.co.yumemi.android.code_check.presentation.user.component.OneUser
-import jp.co.yumemi.android.code_check.presentation.util.CustomCircularProgressIndicator
-import jp.co.yumemi.android.code_check.presentation.util.SnackbarSetting
-import jp.co.yumemi.android.code_check.presentation.util.TestTags
+import jp.co.yumemi.android.code_check.presentation.util.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -48,6 +45,9 @@ fun UserView(
         onSnackBarShow = {
             viewModel.resetError()
         },
+        onScrollEnd = {
+            viewModel.onScrollEnd()
+        },
     )
 }
 
@@ -58,6 +58,7 @@ fun UserViewMain(
     onValueChange: (TextFieldValue) -> Unit = {},
     onSearch: (String) -> Unit = {},
     onSnackBarShow: () -> Unit = {},
+    onScrollEnd: () -> Unit = {},
 ) {
 
     val scrollState = rememberLazyListState()
@@ -75,6 +76,10 @@ fun UserViewMain(
                     onScroll(diff)
                     lastIndex = info.index
                 }
+            }
+            // 最下部 かつ スクロールされた
+            if (scrollState.isScrolledToEnd() && lastIndex != 0) {
+                onScrollEnd()
             }
         }
     }

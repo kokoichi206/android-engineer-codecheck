@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.data.repository.GitHubRepository
 import jp.co.yumemi.android.code_check.data.repository.SearchResultRepository
+import jp.co.yumemi.android.code_check.presentation.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,32 +36,60 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState = _uiState.asStateFlow()
 
-    // 検索結果
+    var lastApiCallSucceeded = true
+
     fun searchResults(inputText: String) {
+        // pagination を初期化する
+        _uiState.update { it.copy(page = Constants.START_PAGINATION) }
+
+        fetchRepositories(inputText, _uiState.value.page)
+    }
+
+    fun onScrollEnd() {
+        if (lastApiCallSucceeded) {
+            fetchRepositories(_uiState.value.searchInput.text, _uiState.value.page)
+        }
+    }
+
+    private fun fetchRepositories(query: String, page: Int) {
 
         // API 呼び出し前のバリデーション
         // query パラメータが空の場合 422 が返る
-        if (inputText.isBlank() || uiState.value.isLoading) {
+        if (query.isBlank() || uiState.value.isLoading) {
             return
         }
 
+        Log.d(TAG, "API call start with: query=$query and page=$page")
         viewModelScope.launch {
             try {
-                _uiState.update { it.copy(isLoading = true, repositories = emptyList()) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        repositories = if (page == 1) emptyList() else it.repositories,
+                    )
+                }
 
-                val result = repository.searchRepositories(inputText)
+                val result = repository.searchRepositories(query = query, page = page)
 
                 if (result.isEmpty()) {
                     val noRecordMsg = application.getString(R.string.noRecordFound)
                     _uiState.update {
                         it.copy(isLoading = false, error = noRecordMsg)
                     }
+                    // 失敗扱いとして、次回の実行をさせない
+                    lastApiCallSucceeded = false
                     return@launch
                 }
-                _uiState.update { it.copy(isLoading = false, repositories = result) }
+                val newResult = _uiState.value.repositories + result
 
-                searchRepository.insertRecord(inputText, true)
+                Log.d(TAG, "newResult contains: ${newResult.size}")
+                _uiState.update { it.copy(isLoading = false, repositories = newResult, page = it.page + 1) }
+
+                lastApiCallSucceeded = true
+                searchRepository.insertRecord(query, true)
+                fetchSearchRecent()
             } catch (e: Exception) {
+                lastApiCallSucceeded = false
                 e.localizedMessage?.let { msg ->
                     Log.e(TAG, msg)
 
@@ -69,10 +98,9 @@ class MainViewModel @Inject constructor(
                         it.copy(isLoading = false, error = errorMsg)
                     }
                 }
-                searchRepository.insertRecord(inputText, false)
+                searchRepository.insertRecord(query, false)
             }
         }
-        fetchSearchRecent()
     }
 
     fun fetchSearchRecent() {
