@@ -18,6 +18,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
@@ -26,13 +28,14 @@ import jp.co.yumemi.android.code_check.presentation.util.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun MainView(
     viewModel: MainViewModel = hiltViewModel(),
     onRepositoryClick: (Repository) -> Unit = {},
     onScroll: (Int) -> Unit = {},
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.fetchSearchRecent()
