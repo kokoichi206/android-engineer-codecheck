@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.User
-import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.user.component.OneUser
 import jp.co.yumemi.android.code_check.presentation.util.*
 import kotlinx.coroutines.Job
@@ -40,7 +39,6 @@ fun UserView(
         },
         onSearch = {
             viewModel.searchResults(it)
-            MainActivity.updateLastSearchDate()
         },
         onSnackBarShow = {
             viewModel.resetError()

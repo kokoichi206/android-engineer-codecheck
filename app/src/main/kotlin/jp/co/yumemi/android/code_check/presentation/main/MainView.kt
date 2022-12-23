@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.Repository
-import jp.co.yumemi.android.code_check.presentation.MainActivity.Companion.updateLastSearchDate
 import jp.co.yumemi.android.code_check.presentation.main.component.OneRepository
 import jp.co.yumemi.android.code_check.presentation.main.component.RecentSearched
 import jp.co.yumemi.android.code_check.presentation.util.*
@@ -84,7 +83,6 @@ fun MainView(
                 },
                 onSearch = {
                     viewModel.searchResults(it)
-                    updateLastSearchDate()
                     viewModel.setShowRecent(true)
                     // 検索実行時にキーボードを閉じる
                     focusManager.clearFocus()
