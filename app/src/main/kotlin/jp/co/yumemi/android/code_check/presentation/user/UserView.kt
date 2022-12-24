@@ -17,20 +17,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.User
-import jp.co.yumemi.android.code_check.presentation.MainActivity
 import jp.co.yumemi.android.code_check.presentation.user.component.OneUser
 import jp.co.yumemi.android.code_check.presentation.util.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun UserView(
     viewModel: UserViewModel = hiltViewModel(),
     onScroll: (Int) -> Unit = {},
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UserViewMain(
         uiState = uiState,
@@ -40,7 +42,6 @@ fun UserView(
         },
         onSearch = {
             viewModel.searchResults(it)
-            MainActivity.updateLastSearchDate()
         },
         onSnackBarShow = {
             viewModel.resetError()
